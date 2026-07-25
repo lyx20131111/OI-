@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OI 社区</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 0;
+            color: #1a1a2e;
+        }
+        .navbar {
+            background: #1a73e8;
+            padding: 0 24px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .navbar-logo img {
+            height: 32px;
+            width: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .navbar-links {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .navbar-links a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .navbar-links a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .navbar-links a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .navbar-right .user-info {
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .navbar-right .user-info:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .navbar-right .user-info .role-tag {
+            font-size: 11px;
+            background: rgba(255, 215, 0, 0.25);
+            color: #ffd700;
+            padding: 1px 8px;
+            border-radius: 10px;
+        }
+        .btn {
+            padding: 6px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #fff;
+            color: #1a73e8;
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+        }
+        .btn-outline-light {
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+        }
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .btn-success {
+            background: #52c41a;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #46a818;
+        }
+        .btn-danger {
+            background: #ff4d4f;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #e04345;
+        }
+        .btn-sm {
+            padding: 3px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        .btn-warning {
+            background: #faad14;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #e09e0e;
+        }
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px 24px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            margin-bottom: 16px;
+            border: 1px solid #e8ecf1;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title .badge {
+            font-size: 12px;
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 1px 12px;
+            border-radius: 12px;
+            font-weight: 400;
+        }
+        .card-title .badge-red {
+            background: #ff4d4f;
+            color: #fff;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            border-radius: 10px;
+            padding: 28px 32px;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .hero h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .hero p {
+            opacity: 0.85;
+            margin-top: 2px;
+            font-size: 14px;
+        }
+        .hero .hero-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+            border: 1px solid #e8ecf1;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .stat-card .num {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a73e8;
+        }
+        .stat-card .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+        .profile-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px 24px;
+            border: 1px solid #e8ecf1;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .profile-card .profile-header {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .profile-card .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .profile-card .info .name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .profile-card .info .bio {
+            color: #666;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        .profile-card .info .stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+            font-size: 13px;
+            color: #888;
+            flex-wrap: wrap;
+        }
+        .profile-card .info .stats span {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .profile-card .profile-actions {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f2f5;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .list-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        .list-item .main {
+            flex: 1;
+            min-width: 0;
+        }
+        .list-item .title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a2e;
+        }
+        .list-item .meta {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .list-item .meta .author {
+            color: #1a73e8;
+            font-weight: 500;
+        }
+        .list-item .meta .tag {
+            background: #f0f2f5;
+            padding: 0 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .team-item {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .team-item:last-child {
+            border-bottom: none;
+        }
+        .team-item .team-info {
+            flex: 1;
+        }
+        .team-item .team-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .team-item .team-desc {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .team-item .team-meta {
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .team-item .team-role {
+            font-size: 12px;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        .team-role.owner {
+            background: #fff3e0;
+            color: #fa8c16;
+        }
+        .team-role.admin {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+        .team-role.member {
+            background: #f0f2f5;
+            color: #666;
+        }
+        .team-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .post-box textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d9dde3;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .post-box textarea:focus {
+            border-color: #1a73e8;
+        }
+        .post-box .toolbar {
+            display: flex;
+            gap: 6px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+        .post-box .toolbar button {
+            padding: 3px 12px;
+            border: 1px solid #d9dde3;
+            border-radius: 4px;
+            background: #fafafa;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.15s;
+        }
+        .post-box .toolbar button:hover {
+            background: #f0f2f5;
+        }
+        .post-box .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+        .comment {
+            padding: 10px 0 10px 36px;
+            border-top: 1px solid #f0f2f5;
+        }
+        .comment .author {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1a73e8;
+        }
+        .comment .time {
+            font-size: 11px;
+            color: #999;
+            margin-left: 8px;
+        }
+        .comment .content {
+            font-size: 13px;
+            color: #444;
+            margin-top: 2px;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: #fff;
+            border-radius: 10px;
+            padding: 24px 28px;
+            max-width: 480px;
+            width: 92%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: modalIn 0.2s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .modal h3 {
+            font-size: 18px;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+        }
+        .modal p {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 14px;
+        }
+        .modal .form-group {
+            margin-bottom: 12px;
+        }
+        .modal .form-group input,
+        .modal .form-group textarea,
+        .modal .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1.5px solid #d9dde3;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .modal .form-group input:focus,
+        .modal .form-group textarea:focus {
+            border-color: #1a73e8;
+        }
+        .modal .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 4px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 24px 16px;
+            color: #999;
+        }
+        .empty-state .icon {
+            font-size: 32px;
+            margin-bottom: 4px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 1px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .tag-blue {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+        .tag-green {
+            background: #e6f7e6;
+            color: #52c41a;
+        }
+        .tag-red {
+            background: #fde8e8;
+            color: #ff4d4f;
+        }
+        .tag-orange {
+            background: #fff3e0;
+            color: #fa8c16;
+        }
+        .benben-item {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border: 1px solid #f0f2f5;
+        }
+        .benben-item .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .benben-item .author {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1a73e8;
+        }
+        .benben-item .time {
+            font-size: 11px;
+            color: #999;
+        }
+        .benben-item .content {
+            font-size: 14px;
+            color: #333;
+            margin-top: 4px;
+        }
+        .benben-item .actions {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #888;
+            margin-top: 6px;
+        }
+        .benben-item .actions span {
+            cursor: pointer;
+        }
+        .benben-item .actions span:hover {
+            color: #1a73e8;
+        }
+        .problem-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .problem-item:last-child {
+            border-bottom: none;
+        }
+        .problem-item .info .title {
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .problem-item .info .meta {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+        .problem-item .info .tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .problem-item .status {
+            font-size: 13px;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+        .problem-item .status.solved {
+            background: #e6f7e6;
+            color: #52c41a;
+        }
+        .problem-item .status.unsolved {
+            background: #f5f5f5;
+            color: #999;
+        }
+        .msg-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .msg-item:last-child {
+            border-bottom: none;
+        }
+        .msg-item .sender {
+            font-weight: 600;
+            color: #1a73e8;
+        }
+        .msg-item .preview {
+            color: #666;
+            font-size: 13px;
+            flex: 1;
+            margin: 0 12px;
+        }
+        .msg-item .time {
+            font-size: 12px;
+            color: #999;
+        }
+        .msg-item .unread {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ff4d4f;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+            background: #f0f2f5;
+            border-radius: 8px;
+            padding: 4px;
+            flex-wrap: wrap;
+        }
+        .tabs .tab {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #666;
+        }
+        .tabs .tab:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .tabs .tab.active {
+            background: #fff;
+            color: #1a73e8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 12px;
+                height: auto;
+                min-height: 50px;
+                padding: 6px 12px;
+            }
+            .navbar-links a {
+                padding: 4px 10px;
+                font-size: 12px;
+            }
+            .navbar-logo {
+                font-size: 17px;
+            }
+            .hero {
+                padding: 18px 20px;
+            }
+            .hero h1 {
+                font-size: 20px;
+            }
+            .card {
+                padding: 14px 16px;
+            }
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .profile-card .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-card .info .stats {
+                justify-content: center;
+            }
+            .modal {
+                padding: 18px 20px;
+            }
+            .list-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .team-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .team-actions {
+                margin-top: 6px;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar-links a {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+            .navbar-logo {
+                font-size: 14px;
+            }
+            .navbar-logo img {
+                height: 24px;
+                width: 24px;
+            }
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stat-card .num {
+                font-size: 18px;
+            }
+            .hero h1 {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部导航栏 ===== -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a class="navbar-logo" onclick="switchPage('home')">
+                <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc_gen_image/e2245a4d7aab4c9b8354999f0699e1be.jpeg~tplv-a9rns2rl98-downsize_watermark_1_5_b.png?lk3s=8e244e95&rcl=20260502212115C49FBE3BD075F155E9FD&rrcfp=827586d3&x-expires=2093088098&x-signature=lYBFTdIvoX1I7AttCNlv6Z%2BupTI%3D" alt="Logo">
+                OI 社区
+            </a>
+            <div class="navbar-links">
+                <a class="active" onclick="switchPage('home')">🏠 首页</a>
+                <a onclick="switchPage('taopian')">🍑 桃片</a>
+                <a onclick="switchPage('discuss')">💬 讨论</a>
+                <a onclick="switchPage('benben')">🐂 犇犇</a>
+                <a onclick="switchPage('problems')">📚 题库</a>
+                <a onclick="switchPage('article')">📝 文章</a>
+                <a onclick="switchPage('team')">👥 团队</a>
+                <a onclick="switchPage('msg')">✉️ 私信</a>
+            </div>
+        </div>
+        <div class="navbar-right" id="navbarRight">
+            <button class="btn btn-primary" onclick="openLogin()">登录</button>
+            <button class="btn btn-outline-light" onclick="openRegister()">注册</button>
+        </div>
+    </nav>
+
+    <!-- ===== 主体 ===== -->
+    <div class="container">
+
+        <!-- ===== 页面：首页 ===== -->
+        <div class="page active" id="page-home">
+            <div class="hero">
+                <div>
+                    <h1>Hi 欢迎来到 OI 社区</h1>
+                    <p>桃片放逐 · 技术讨论 · 犇犇动态 · 海量题库 · 团队协作</p>
+                </div>
+                <div class="hero-right" id="heroRight"></div>
+            </div>
+            <div class="stat-grid" id="homeStats">
+                <div class="stat-card"><div class="num" id="statUsers">0</div><div class="label">注册用户</div></div>
+                <div class="stat-card"><div class="num" id="statTaopians">0</div><div class="label">桃片</div></div>
+                <div class="stat-card"><div class="num" id="statTeams">0</div><div class="label">团队</div></div>
+                <div class="stat-card"><div class="num" id="statProblems">0</div><div class="label">题目</div></div>
+            </div>
+            <div class="profile-card" id="profileCard"></div>
+            <div class="card">
+                <div class="card-title">🔥 最新桃片</div>
+                <div id="homeTaopians"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">📋 最新讨论</div>
+                <div id="homeDiscusses"></div>
+            </div>
+        </div>
+
+        <!-- ===== 页面：桃片 ===== -->
+        <div class="page" id="page-taopian">
+            <div class="card post-box" id="taopianPostBox" style="display:none;">
+                <div class="card-title">🍑 发布桃片 <span class="badge badge-red">站长专属</span></div>
+                <textarea id="taopianInput" placeholder="分享你的想法... 支持 Markdown 和 LaTeX 公式"></textarea>
+                <div class="toolbar">
+                    <button onclick="insertMarkdown('taopianInput','**','**')">粗体</button>
+                    <button onclick="insertMarkdown('taopianInput','*','*')">斜体</button>
+                    <button onclick="insertMarkdown('taopianInput','`','`')">代码</button>
+                    <button onclick="insertMarkdown('taopianInput','[','](url)')">链接</button>
+                    <button onclick="insertMarkdown('taopianInput','$$','$$')">公式</button>
+                    <button onclick="insertMarkdown('taopianInput','# ','')">标题</button>
+                    <button onclick="insertMarkdown('taopianInput','- ','')">列表</button>
+                </div>
+                <div class="actions">
+                    <span style="font-size:12px;color:#999;">支持 Markdown · LaTeX</span>
+                    <button class="btn btn-danger" onclick="publishTaopian()">发布</button>
+                </div>
+            </div>
+            <div class="card" id="taopianLockMsg" style="display:none;background:#fff8f8;border-color:#ffd4d4;">
+                <div style="text-align:center;padding:12px;"><span style="font-size:28px;">🔒</span>
+                    <h3 style="color:#ff4d4f;margin:4px 0;font-size:16px;">仅站长可发布桃片</h3>
+                    <p style="color:#888;font-size:13px;">你可以浏览和评论桃片</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">📋 桃片广场 <span class="badge" id="taopianCount">0</span></div>
+                <div id="taopianList"></div>
+            </div>
+        </div>
+
+        <!-- ===== 页面：讨论 ===== -->
+        <div class="page" id="page-discuss">
+            <div class="card">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+                    <select id="discussCategory" style="padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;background:#fff;">
+                        <option value="all">全部</option>
+                        <option value="算法">算法</option>
+                        <option value="数据结构">数据结构</option>
+                        <option value="数学">数学</option>
+                        <option value="字符串">字符串</option>
+                        <option value="图论">图论</option>
+                        <option value="动态规划">动态规划</option>
+                        <option value="其他">其他</option>
+                    </select>
+                    <input type="text" id="discussSearch" placeholder="搜索..." style="flex:1;padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:120px;">
+                    <button class="btn btn-success" onclick="openNewDiscuss()">发起</button>
+                </div>
+                <div id="discussList"></div>
+            </div>
+        </div>
+
+        <!-- ===== 页面：犇犇 ===== -->
+        <div class="page" id="page-benben">
+            <div class="card post-box">
+                <div class="card-title">🐂 发一条犇犇</div>
+                <textarea id="benbenInput" placeholder="一句话动态... (最多140字)" maxlength="140" style="min-height:50px;"></textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                    <span style="font-size:12px;color:#999;"><span id="benbenCount">0</span>/140</span>
+                    <button class="btn btn-success" onclick="publishBenben()">发送</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🐂 犇犇时间线 <span class="badge" id="benbenTotal">0</span></div>
+                <div id="benbenList"></div>
+            </div>
+        </div>
+
+        <!-- ===== 页面：题库 ===== -->
+        <div class="page" id="page-problems">
+            <div class="card">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+                    <select id="probCategory" style="padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;background:#fff;">
+                        <option value="all">全部</option>
+                        <option value="算法">算法</option>
+                        <option value="数据结构">数据结构</option>
+                        <option value="数学">数学</option>
+                        <option value="字符串">字符串</option>
+                        <option value="图论">图论</option>
+                        <option value="动态规划">动态规划</option>
+                    </select>
+                    <select id="probDifficulty" style="padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;background:#fff;">
+                        <option value="all">全部难度</option>
+                        <option value="easy">简单</option>
+                        <option value="mid">中等</option>
+                        <option value="hard">困难</option>
+                    </select>
+                    <input type="text" id="probSearch" placeholder="搜索..." style="flex:1;padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:120px;">
+                    <button class="btn btn-success" onclick="openNewProblem()">➕ 添加</button>
+                </div>
+                <div id="problemList"></div>
+            </div>
+        </div>
+
+        <!-- ===== 页面：团队 ===== -->
+        <div class="page" id="page-team">
+            <div class="card">
+                <div class="card-title">👥 我的团队 <span class="badge" id="myTeamCount">0</span>
+                    <button class="btn btn-warning btn-sm" onclick="openRename()" style="margin-left:auto;">✏️ 改名</button>
+                    <button class="btn btn-danger btn-sm" onclick="openChangePassword()" style="margin-left:6px;">🔑 修改密码</button>
+                </div>
+                <div id="myTeamList"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">⚙️ 团队管理</div>
+                <div class="tabs">
+                    <button class="tab active" data-tab="tab-create">创建团队</button>
+                    <button class="tab" data-tab="tab-invite">邀请成员</button>
+                    <button class="tab" data-tab="tab-members">成员管理</button>
+                    <button class="tab" data-tab="tab-all">全部团队</button>
+                </div>
+                <div class="tab-content active" id="tab-create">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <input type="text" id="teamName" placeholder="团队名称" style="flex:1;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:150px;">
+                        <input type="text" id="teamDesc" placeholder="团队简介" style="flex:1;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:150px;">
+                        <button class="btn btn-success" onclick="createTeam()">创建</button>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-invite">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <select id="inviteTeamSelect" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:150px;">
+                            <option value="">选择团队</option>
+                        </select>
+                        <input type="text" id="inviteUsername" placeholder="要邀请的用户名" style="flex:1;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:120px;">
+                        <select id="inviteRole" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
+                            <option value="member">普通成员</option>
+                            <option value="admin">管理员</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="inviteMember()">邀请</button>
+                    </div>
+                    <div id="inviteResult" style="margin-top:8px;font-size:13px;color:#666;"></div>
+                </div>
+                <div class="tab-content" id="tab-members">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                        <select id="manageTeamSelect" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:150px;" onchange="renderTeamMembers()">
+                            <option value="">选择团队</option>
+                        </select>
+                    </div>
+                    <div id="memberList"></div>
+                </div>
+                <div class="tab-content" id="tab-all">
+                    <div id="allTeamList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 页面：私信 ===== -->
+        <div class="page" id="page-msg">
+            <div class="card">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                    <input type="text" id="msgSearch" placeholder="搜索联系人..." style="flex:1;padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:120px;">
+                    <button class="btn btn-success" onclick="openNewMsg()">✉️ 发私信</button>
+                </div>
+                <div id="msgList"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 弹窗 -->
+    <!-- ============================================================ -->
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h3>🔐 登录</h3>
+            <p>输入用户名和密码</p>
+            <div class="form-group"><input type="text" id="loginUsername" placeholder="用户名" /></div>
+            <div class="form-group"><input type="password" id="loginPassword" placeholder="密码" /></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeLogin()">取消</button>
+                <button class="btn btn-primary" onclick="login()" style="background:#1a73e8;color:#fff;">登录</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <h3>📝 注册</h3>
+            <p>创建新账号</p>
+            <div class="form-group"><input type="text" id="regUsername" placeholder="用户名" /></div>
+            <div class="form-group"><input type="password" id="regPassword" placeholder="密码" /></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeRegister()">取消</button>
+                <button class="btn btn-success" onclick="register()">注册</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="renameModal">
+        <div class="modal">
+            <h3>✏️ 修改用户名</h3>
+            <p>输入新的用户名（2-20个字符）</p>
+            <div class="form-group"><input type="text" id="renameInput" placeholder="新用户名" maxlength="20" /></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeRename()">取消</button>
+                <button class="btn btn-warning" onclick="confirmRename()">确认修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 修改密码弹窗 ===== -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal">
+            <h3>🔑 修改密码</h3>
+            <p>输入旧密码和新密码</p>
+            <div class="form-group">
+                <input type="password" id="oldPassword" placeholder="当前密码" />
+            </div>
+            <div class="form-group">
+                <input type="password" id="newPassword1" placeholder="新密码（至少6位）" />
+            </div>
+            <div class="form-group">
+                <input type="password" id="newPassword2" placeholder="确认新密码" />
+            </div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeChangePassword()">取消</button>
+                <button class="btn btn-danger" onclick="confirmChangePassword()" style="background:#ff4d4f;color:#fff;">确认修改</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="newDiscussModal">
+        <div class="modal">
+            <h3>💬 发起讨论</h3>
+            <div class="form-group"><input type="text" id="discussTitle" placeholder="标题" /></div>
+            <div class="form-group">
+                <select id="discussCategorySelect" style="width:100%;padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
+                    <option value="算法">算法</option>
+                    <option value="数据结构">数据结构</option>
+                    <option value="数学">数学</option>
+                    <option value="字符串">字符串</option>
+                    <option value="图论">图论</option>
+                    <option value="动态规划">动态规划</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div class="form-group"><textarea id="discussContent" placeholder="内容（支持 Markdown）" style="min-height:100px;"></textarea></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeNewDiscuss()">取消</button>
+                <button class="btn btn-success" onclick="submitDiscuss()">发布</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="newArticleModal">
+        <div class="modal" style="max-width:540px;">
+            <h3>📝 写文章</h3>
+            <div class="form-group"><input type="text" id="articleTitle" placeholder="标题" /></div>
+            <div class="form-group"><input type="text" id="articleTags" placeholder="标签，用逗号分隔" /></div>
+            <div class="form-group"><textarea id="articleContent" placeholder="正文（支持 Markdown + LaTeX）" style="min-height:160px;"></textarea></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeNewArticle()">取消</button>
+                <button class="btn btn-success" onclick="submitArticle()">发布</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="newMsgModal">
+        <div class="modal">
+            <h3>✉️ 发送私信</h3>
+            <div class="form-group"><input type="text" id="msgTarget" placeholder="收件人" /></div>
+            <div class="form-group"><textarea id="msgContent" placeholder="消息内容" style="min-height:60px;"></textarea></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeNewMsg()">取消</button>
+                <button class="btn btn-success" onclick="sendMsg()">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="newProblemModal">
+        <div class="modal" style="max-width:520px;">
+            <h3>📚 添加题目</h3>
+            <div class="form-group"><input type="text" id="probTitle" placeholder="题目名称" /></div>
+            <div class="form-group">
+                <select id="probCategorySelect" style="width:100%;padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
+                    <option value="算法">算法</option>
+                    <option value="数据结构">数据结构</option>
+                    <option value="数学">数学</option>
+                    <option value="字符串">字符串</option>
+                    <option value="图论">图论</option>
+                    <option value="动态规划">动态规划</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="probDifficultySelect" style="width:100%;padding:6px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
+                    <option value="easy">简单</option>
+                    <option value="mid">中等</option>
+                    <option value="hard">困难</option>
+                </select>
+            </div>
+            <div class="form-group"><textarea id="probDesc" placeholder="题目描述" style="min-height:60px;"></textarea></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeNewProblem()">取消</button>
+                <button class="btn btn-success" onclick="submitProblem()">添加</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="profileEditModal">
+        <div class="modal">
+            <h3>✏️ 编辑资料</h3>
+            <div class="form-group"><input type="text" id="editBio" placeholder="个人简介" /></div>
+            <div class="form-group"><input type="text" id="editSignature" placeholder="个性签名" /></div>
+            <div class="modal-actions">
+                <button class="btn" style="background:#f0f2f5;color:#555;" onclick="closeProfileEdit()">取消</button>
+                <button class="btn btn-success" onclick="saveProfile()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 数据层
+        // ============================================================
+        function getData() {
+            const raw = localStorage.getItem('communityData');
+            if (raw) {
+                try { return JSON.parse(raw); } catch (e) {}
+            }
+            return {
+                users: [
+                    { id: 1, username: 'lyx20131111', password: '20131111', role: 'owner', bio: 'OI 社区站长',
+                        signature: '代码改变世界' }
+                ],
+                teams: [],
+                taopians: [
+                    { id: 1, author: 'lyx20131111',
+                        content: '🍑 欢迎来到 **OI 社区**！这里支持 **Markdown** 和 **LaTeX** 公式，比如 $E = mc^2$',
+                        time: Date.now() - 3600000, likes: 5, comments: [{ author: 'lyx20131111', content: '欢迎！',
+                            time: Date.now() - 1800000 }] }
+                ],
+                discusses: [
+                    { id: 1, author: 'lyx20131111', title: '动态规划入门指南', category: '动态规划',
+                        content: 'DP 的核心思想是 **状态转移**...',
+                        time: Date.now() - 7200000, replies: 3 }
+                ],
+                benbens: [
+                    { id: 1, author: 'lyx20131111', content: '今天开始刷题！💪', time: Date.now() - 1800000, likes: 2 }
+                ],
+                articles: [
+                    { id: 1, author: 'lyx20131111', title: '从零开始学算法', tags: ['算法', '入门'],
+                        content: '# 从零开始学算法\n\n## 为什么要学算法？\n\n算法是编程的**核心**...', time: Date.now() - 86400000,
+                        views: 120 }
+                ],
+                problems: [
+                    { id: 1, title: 'A + B 问题', category: '算法', difficulty: 'easy',
+                        desc: '输入两个整数 a 和 b，输出 a+b 的值',
+                        author: 'lyx20131111', solved: false },
+                    { id: 2, title: '最长上升子序列', category: '动态规划', difficulty: 'mid',
+                        desc: '给定一个整数数组，求最长上升子序列的长度', author: 'lyx20131111', solved: false },
+                    { id: 3, title: 'Dijkstra 最短路', category: '图论', difficulty: 'hard',
+                        desc: '给定一个带权有向图，求从起点到终点的最短路径', author: 'lyx20131111', solved: false },
+                ],
+                messages: [
+                    { id: 1, from: 'lyx20131111', to: 'user1', content: '你好！欢迎来到社区', time: Date.now() - 3600000,
+                        read: false }
+                ],
+                nextId: { taopian: 2, discuss: 2, benben: 2, article: 2, msg: 2, user: 2, problem: 4, team: 1 }
+            };
+        }
+
+        function saveData(data) {
+            localStorage.setItem('communityData', JSON.stringify(data));
+        }
+
+        let appData = getData();
+        let currentUser = null;
+
+        // ============================================================
+        // 恢复登录状态
+        // ============================================================
+        function restoreSession() {
+            const saved = sessionStorage.getItem('currentUser');
+            if (saved) {
+                try {
+                    const userData = JSON.parse(saved);
+                    const validUser = getUserByName(userData.username);
+                    if (validUser && validUser.password === userData.password) {
+                        currentUser = validUser;
+                        return;
+                    }
+                } catch (e) {}
+                sessionStorage.removeItem('currentUser');
+            }
+            currentUser = null;
+        }
+
+        // ============================================================
+        // 工具函数
+        // ============================================================
+        function getUser(id) { return appData.users.find(u => u.id === id); }
+
+        function getUserByName(name) { return appData.users.find(u => u.username === name); }
+
+        function getTeam(id) { return appData.teams.find(t => t.id === id); }
+
+        function isTeamOwner(teamId, userId) {
+            const team = getTeam(teamId);
+            if (!team) return false;
+            return team.ownerId === userId;
+        }
+
+        function isTeamAdmin(teamId, userId) {
+            const team = getTeam(teamId);
+            if (!team) return false;
+            if (team.ownerId === userId) return true;
+            const member = team.members.find(m => m.userId === userId);
+            return member && member.role === 'admin';
+        }
+
+        function getTeamRole(teamId, userId) {
+            const team = getTeam(teamId);
+            if (!team) return null;
+            if (team.ownerId === userId) return 'owner';
+            const member = team.members.find(m => m.userId === userId);
+            return member ? member.role : null;
+        }
+
+        function formatTime(ts) {
+            const d = new Date(ts);
+            const now = new Date();
+            const diff = Math.floor((now - d) / 1000);
+            if (diff < 60) return '刚刚';
+            if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
+            if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+            if (diff < 604800) return Math.floor(diff / 86400) + '天前';
+            return d.toLocaleDateString();
+        }
+
+        function getUserColor(username) {
+            const user = getUserByName(username);
+            if (!user) return '#1a73e8';
+            return user.role === 'owner' ? '#ff4d4f' : '#1a73e8';
+        }
+
+        function getRoleName(role) {
+            const map = { owner: '站长', user: '用户' };
+            return map[role] || '用户';
+        }
+
+        function renderMarkdown(text) {
+            if (!text) return '';
+            let html = text;
+            html = html.replace(/\$\$([\s\S]+?)\$\$/g, (match, formula) => {
+                try { return katex.renderToString(formula, { displayMode: true, throwOnError: false }); } catch (e) { return match; }
+            });
+            html = html.replace(/\$([^\$]+?)\$/g, (match, formula) => {
+                try { return katex.renderToString(formula, { displayMode: false, throwOnError: false }); } catch (e) { return match; }
+            });
+            html = marked.parse(html);
+            return html;
+        }
+
+        // ============================================================
+        // 导航切换
+        // ============================================================
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
+            const map = { 'home': '首页', 'taopian': '桃片', 'discuss': '讨论', 'benben': '犇犇', 'problems': '题库',
+                'article': '文章', 'team': '团队', 'msg': '私信' };
+            document.querySelectorAll('.navbar-links a').forEach(a => {
+                if (a.textContent.includes(map[pageId] || '')) a.classList.add('active');
+            });
+            if (pageId === 'home') { renderHome();
+                renderProfileCard(); }
+            if (pageId === 'taopian') renderTaopians();
+            if (pageId === 'discuss') renderDiscusses();
+            if (pageId === 'benben') renderBenbens();
+            if (pageId === 'problems') renderProblems();
+            if (pageId === 'article') renderArticles();
+            if (pageId === 'team') renderTeams();
+            if (pageId === 'msg') renderMessages();
+        }
+
+        // ============================================================
+        // 渲染函数
+        // ============================================================
+        function renderAll() {
+            renderHeader();
+            renderHome();
+            renderProfileCard();
+            renderTaopians();
+            renderDiscusses();
+            renderBenbens();
+            renderProblems();
+            renderArticles();
+            renderTeams();
+            renderMessages();
+            renderTaopianPermission();
+        }
+
+        function renderHeader() {
+            const right = document.getElementById('navbarRight');
+            if (currentUser) {
+                const roleMap = { owner: '站长', user: '用户' };
+                right.innerHTML = `
+                        <span class="user-info" onclick="switchPage('home')">
+                            <span style="color:#fff;">${currentUser.username}</span>
+                            <span class="role-tag">${roleMap[currentUser.role] || '用户'}</span>
+                        </span>
+                        <button class="btn btn-outline-light" onclick="logout()" style="font-size:13px;padding:4px 14px;">退出</button>
+                    `;
+            } else {
+                right.innerHTML = `
+                        <button class="btn btn-primary" onclick="openLogin()">登录</button>
+                        <button class="btn btn-outline-light" onclick="openRegister()">注册</button>
+                    `;
+            }
+            const heroRight = document.getElementById('heroRight');
+            if (currentUser) {
+                heroRight.innerHTML =
+                    `<span style="background:rgba(255,255,255,0.15);padding:4px 14px;border-radius:20px;font-size:14px;">👋 ${currentUser.username}</span>`;
+            } else {
+                heroRight.innerHTML =
+                    `
+                        <button class="btn btn-primary" onclick="openLogin()" style="background:#fff;color:#1a73e8;">登录</button>
+                        <button class="btn btn-outline-light" onclick="openRegister()">注册</button>
+                    `;
+            }
+        }
+
+        function renderHome() {
+            document.getElementById('statUsers').textContent = appData.users.length;
+            document.getElementById('statTaopians').textContent = appData.taopians.length;
+            document.getElementById('statTeams').textContent = appData.teams.length;
+            document.getElementById('statProblems').textContent = appData.problems.length;
+
+            const homeTaopians = document.getElementById('homeTaopians');
+            const recentTaopians = appData.taopians.slice(-3).reverse();
+            if (recentTaopians.length === 0) {
+                homeTaopians.innerHTML = '<div style="color:#999;padding:8px 0;font-size:14px;">暂无桃片</div>';
+            } else {
+                homeTaopians.innerHTML = recentTaopians.map(p => `
+                        <div class="list-item">
+                            <div class="main">
+                                <div class="title">${renderMarkdown(p.content.substring(0, 80) + (p.content.length > 80 ? '...' : ''))}</div>
+                                <div class="meta"><span class="author">${p.author}</span><span>${formatTime(p.time)}</span><span>❤️ ${p.likes || 0}</span><span>💬 ${(p.comments || []).length}</span></div>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+
+            const homeDiscusses = document.getElementById('homeDiscusses');
+            const recentDiscusses = appData.discusses.slice(-3).reverse();
+            if (recentDiscusses.length === 0) {
+                homeDiscusses.innerHTML = '<div style="color:#999;padding:8px 0;font-size:14px;">暂无讨论</div>';
+            } else {
+                homeDiscusses.innerHTML = recentDiscusses.map(d => `
+                        <div class="list-item">
+                            <div class="main">
+                                <div class="title">${d.title}</div>
+                                <div class="meta"><span class="author">${d.author}</span><span class="tag">${d.category}</span><span>${formatTime(d.time)}</span><span>💬 ${d.replies || 0}</span></div>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+        }
+
+        function renderProfileCard() {
+            const container = document.getElementById('profileCard');
+            if (!currentUser) {
+                container.innerHTML =
+                    `
+                        <div style="text-align:center;padding:12px 0;">
+                            <span style="font-size:28px;">🔒</span>
+                            <p style="color:#888;margin-top:4px;">登录后查看个人中心</p>
+                            <button class="btn btn-primary" onclick="openLogin()" style="margin-top:6px;background:#1a73e8;color:#fff;">立即登录</button>
+                        </div>
+                    `;
+                return;
+            }
+            const user = getUserByName(currentUser.username);
+            const myTaopians = appData.taopians.filter(p => p.author === currentUser.username).length;
+            const myDiscusses = appData.discusses.filter(d => d.author === currentUser.username).length;
+            const myProblems = appData.problems.filter(p => p.author === currentUser.username).length;
+            const myArticles = appData.articles.filter(a => a.author === currentUser.username).length;
+            const myTeams = appData.teams.filter(t => t.ownerId === currentUser.id || t.members.some(m => m.userId === currentUser
+                .id)).length;
+
+            container.innerHTML = `
+                    <div class="profile-header">
+                        <div class="avatar">${currentUser.username.charAt(0).toUpperCase()}</div>
+                        <div class="info">
+                            <div class="name">${currentUser.username} <span class="tag ${currentUser.role === 'owner' ? 'tag-red' : 'tag-blue'}">${getRoleName(currentUser.role)}</span></div>
+                            <div class="bio">${user.bio || '这个人很懒，什么都没写'}</div>
+                            <div style="color:#888;font-size:13px;">${user.signature || '✨ 暂无签名'}</div>
+                            <div class="stats">
+                                <span>📝 <span>${myTaopians}</span> 桃片</span>
+                                <span>💬 <span>${myDiscusses}</span> 讨论</span>
+                                <span>📚 <span>${myProblems}</span> 题目</span>
+                                <span>📖 <span>${myArticles}</span> 文章</span>
+                                <span>👥 <span>${myTeams}</span> 团队</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="btn btn-primary" onclick="openProfileEdit()" style="background:#1a73e8;color:#fff;font-size:13px;">✏️ 编辑资料</button>
+                        <button class="btn btn-warning" onclick="openRename()" style="font-size:13px;">✏️ 改名</button>
+                        <button class="btn btn-danger" onclick="openChangePassword()" style="background:#ff4d4f;color:#fff;font-size:13px;">🔑 修改密码</button>
+                        ${currentUser.role === 'owner' ? `<span style="background:#fff8f8;padding:4px 14px;border-radius:4px;border:1px solid #ffd4d4;font-size:13px;color:#ff4d4f;">👑 站长特权</span>` : ''}
+                    </div>
+                `;
+        }
+
+        // ============================================================
+        // 团队渲染
+        // ============================================================
+        function renderTeams() {
+            renderMyTeams();
+            renderAllTeams();
+            renderTeamSelects();
+        }
+
+        function renderMyTeams() {
+            const container = document.getElementById('myTeamList');
+            if (!currentUser) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="icon">🔒</div><p>请登录查看你的团队</p></div>`;
+                document.getElementById('myTeamCount').textContent = '0';
+                return;
+            }
+            const myTeams = appData.teams.filter(t =>
+                t.ownerId === currentUser.id || t.members.some(m => m.userId === currentUser.id)
+            );
+            document.getElementById('myTeamCount').textContent = myTeams.length;
+            if (myTeams.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="icon">👥</div><p>你还没有加入任何团队</p></div>`;
+                return;
+            }
+            container.innerHTML = myTeams.map(t => {
+                const role = getTeamRole(t.id, currentUser.id);
+                const roleMap = { owner: '队长', admin: '管理员', member: '成员' };
+                const roleClass = { owner: 'team-role owner', admin: 'team-role admin', member: 'team-role member' };
+                const memberCount = t.members.length + 1;
+                return `
+                        <div class="team-item">
+                            <div class="team-info">
+                                <div class="team-name">${t.name}</div>
+                                <div class="team-desc">${t.desc || '暂无简介'}</div>
+                                <div class="team-meta">
+                                    <span>👥 ${memberCount} 人</span>
+                                    <span class="${roleClass[role] || 'team-role member'}">${roleMap[role] || '成员'}</span>
+                                    <span>创建于 ${formatTime(t.createdAt)}</span>
+                                </div>
+                            </div>
+                            <div class="team-actions">
+                                ${role === 'owner' ? `<button class="btn btn-danger btn-sm" onclick="deleteTeam(${t.id})">解散</button>` : ''}
+                                ${role === 'owner' || role === 'admin' ? `<button class="btn btn-sm" style="background:#e8f0fe;color:#1a73e8;" onclick="switchPage('team')">管理</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+        }
+
+        function renderAllTeams() {
+            const container = document.getElementById('allTeamList');
+            if (appData.teams.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="icon">👥</div><p>还没有团队，快来创建第一个吧！</p></div>`;
+                return;
+            }
+            container.innerHTML = appData.teams.map(t => {
+                const memberCount = t.members.length + 1;
+                const owner = getUser(t.ownerId);
+                return `
+                        <div class="team-item">
+                            <div class="team-info">
+                                <div class="team-name">${t.name}</div>
+                                <div class="team-desc">${t.desc || '暂无简介'}</div>
+                                <div class="team-meta">
+                                    <span>👥 ${memberCount} 人</span>
+                                    <span>👑 ${owner ? owner.username : '未知'}</span>
+                                    <span>创建于 ${formatTime(t.createdAt)}</span>
+                                </div>
+                            </div>
+                            <div>
+                                ${currentUser ? `<button class="btn btn-sm btn-primary" onclick="joinTeam(${t.id})" style="background:#1a73e8;color:#fff;">加入</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+        }
+
+        function renderTeamSelects() {
+            if (!currentUser) return;
+            const myTeams = appData.teams.filter(t =>
+                t.ownerId === currentUser.id || t.members.some(m => m.userId === currentUser.id)
+            );
+            const select1 = document.getElementById('inviteTeamSelect');
+            const select2 = document.getElementById('manageTeamSelect');
+            const html = myTeams.map(t =>
+                `<option value="${t.id}">${t.name}</option>`
+            ).join('');
+            select1.innerHTML = `<option value="">选择团队</option>${html}`;
+            select2.innerHTML = `<option value="">选择团队</option>${html}`;
+        }
+
+        function renderTeamMembers() {
+            const container = document.getElementById('memberList');
+            const teamId = parseInt(document.getElementById('manageTeamSelect').value);
+            if (!teamId) {
+                container.innerHTML = '<div style="color:#999;font-size:13px;">请选择一个团队</div>';
+                return;
+            }
+            const team = getTeam(teamId);
+            if (!team) {
+                container.innerHTML = '<div style="color:#999;font-size:13px;">团队不存在</div>';
+                return;
+            }
+            const canManage = currentUser && (team.ownerId === currentUser.id || isTeamAdmin(teamId, currentUser.id));
+            const allMembers = [
+                { userId: team.ownerId, role: 'owner' },
+                ...team.members
+            ];
+            const roleMap = { owner: '👑 队长', admin: '🔧 管理员', member: '👤 成员' };
+            const roleClass = { owner: 'team-role owner', admin: 'team-role admin', member: 'team-role member' };
+
+            container.innerHTML = `
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <thead><tr style="background:#f8f9fa;"><th style="padding:8px 10px;text-align:left;">用户</th><th style="padding:8px 10px;text-align:left;">角色</th><th style="padding:8px 10px;text-align:left;">操作</th></tr></thead>
+                        <tbody>
+                            ${allMembers.map(m => {
+                                const user = getUser(m.userId);
+                                if (!user) return '';
+                                const isSelf = currentUser && currentUser.id === m.userId;
+                                const canAct = canManage && m.role !== 'owner' && !isSelf;
+                                return `
+                                    <tr>
+                                        <td style="padding:6px 10px;">${user.username} ${isSelf ? '(你)' : ''}</td>
+                                        <td style="padding:6px 10px;"><span class="${roleClass[m.role] || 'team-role member'}">${roleMap[m.role] || '成员'}</span></td>
+                                        <td style="padding:6px 10px;">
+                                            ${canAct ? `
+                                                ${m.role === 'admin' ? `<button class="btn btn-sm" style="background:#f0f2f5;color:#555;" onclick="setMemberRole(${teamId},${m.userId},'member')">降为成员</button>` : ''}
+                                                ${m.role === 'member' ? `<button class="btn btn-sm" style="background:#e8f0fe;color:#1a73e8;" onclick="setMemberRole(${teamId},${m.userId},'admin')">设为管理</button>` : ''}
+                                                <button class="btn btn-sm" style="background:#fde8e8;color:#ff4d4f;" onclick="removeMember(${teamId},${m.userId})">移除</button>
+                                            ` : (m.role === 'owner' ? '<span style="color:#999;font-size:12px;">不可操作</span>' : '')}
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+        }
+
+        // ============================================================
+        // 团队操作
+        // ============================================================
+        function createTeam() {
+            if (!currentUser) { alert('请先登录'); return; }
+            const name = document.getElementById('teamName').value.trim();
+            const desc = document.getElementById('teamDesc').value.trim();
+            if (!name) { alert('请输入团队名称'); return; }
+            if (appData.teams.find(t => t.name === name)) { alert('团队名称已存在'); return; }
+            appData.teams.push({
+                id: appData.nextId.team++,
+                name,
+                desc,
+                ownerId: currentUser.id,
+                members: [],
+                createdAt: Date.now()
+            });
+            saveData(appData);
+            document.getElementById('teamName').value = '';
+            document.getElementById('teamDesc').value = '';
+            renderAll();
+            alert(`✅ 团队 "${name}" 创建成功！`);
+        }
+
+        function deleteTeam(teamId) {
+            const team = getTeam(teamId);
+            if (!team) return;
+            if (!currentUser || team.ownerId !== currentUser.id) { alert('只有队长可以解散团队'); return; }
+            if (!confirm(`确定要解散团队 "${team.name}" 吗？`)) return;
+            appData.teams = appData.teams.filter(t => t.id !== teamId);
+            saveData(appData);
+            renderAll();
+        }
+
+        function inviteMember() {
+            if (!currentUser) { alert('请先登录'); return; }
+            const teamId = parseInt(document.getElementById('inviteTeamSelect').value);
+            const username = document.getElementById('inviteUsername').value.trim();
+            const role = document.getElementById('inviteRole').value;
+            if (!teamId) { alert('请选择团队'); return; }
+            if (!username) { alert('请输入用户名'); return; }
+            const team = getTeam(teamId);
+            if (!team) { alert('团队不存在'); return; }
+            if (!isTeamAdmin(teamId, currentUser.id) && team.ownerId !== currentUser.id) {
+                alert('你没有权限邀请成员');
+                return;
+            }
+            const user = getUserByName(username);
+            if (!user) { alert('用户不存在'); return; }
+            if (team.ownerId === user.id) { alert('该用户已是队长'); return; }
+            if (team.members.find(m => m.userId === user.id)) { alert('该用户已在团队中'); return; }
+            team.members.push({ userId: user.id, role });
+            saveData(appData);
+            document.getElementById('inviteUsername').value = '';
+            document.getElementById('inviteResult').textContent = `✅ 已邀请 "${username}" 加入团队`;
+            renderAll();
+        }
+
+        function joinTeam(teamId) {
+            if (!currentUser) { alert('请先登录'); return; }
+            const team = getTeam(teamId);
+            if (!team) { alert('团队不存在'); return; }
+            if (team.ownerId === currentUser.id) { alert('你已是队长'); return; }
+            if (team.members.find(m => m.userId === currentUser.id)) { alert('你已在团队中'); return; }
+            team.members.push({ userId: currentUser.id, role: 'member' });
+            saveData(appData);
+            renderAll();
+            alert(`✅ 已加入团队 "${team.name}"`);
+        }
+
+        function setMemberRole(teamId, userId, newRole) {
+            const team = getTeam(teamId);
+            if (!team) return;
+            if (!currentUser || (team.ownerId !== currentUser.id && !isTeamAdmin(teamId, currentUser.id))) {
+                alert('没有权限');
+                return;
+            }
+            const member = team.members.find(m => m.userId === userId);
+            if (!member) { alert('成员不存在'); return; }
+            member.role = newRole;
+            saveData(appData);
+            renderTeamMembers();
+            renderAll();
+        }
+
+        function removeMember(teamId, userId) {
+            const team = getTeam(teamId);
+            if (!team) return;
+            if (!currentUser || (team.ownerId !== currentUser.id && !isTeamAdmin(teamId, currentUser.id))) {
+                alert('没有权限');
+                return;
+            }
+            if (team.ownerId === userId) { alert('不能移除队长'); return; }
+            if (!confirm('确定移除该成员吗？')) return;
+            team.members = team.members.filter(m => m.userId !== userId);
+            saveData(appData);
+            renderTeamMembers();
+            renderAll();
+        }
+
+        // ============================================================
+        // 其他操作函数
+        // ============================================================
+        function publishTaopian() {
+            if (!currentUser || currentUser.role !== 'owner') { alert('❌ 只有站长可以发布桃片！'); return; }
+            const input = document.getElementById('taopianInput');
+            const content = input.value.trim();
+            if (!content) { alert('内容不能为空'); return; }
+            appData.taopians.push({
+                id: appData.nextId.taopian++,
+                author: currentUser.username,
+                content,
+                time: Date.now(),
+                likes: 0,
+                comments: []
+            });
+            saveData(appData);
+            input.value = '';
+            renderAll();
+        }
+
+        function likeTaopian(id) {
+            if (!currentUser) { alert('请先登录'); return; }
+            const post = appData.taopians.find(p => p.id === id);
+            if (post) { post.likes = (post.likes || 0) + 1;
+                post.liked = true;
+                saveData(appData);
+                renderTaopians(); }
+        }
+
+        function commentTaopian(id) {
+            if (!currentUser) { alert('请先登录'); return; }
+            const input = document.getElementById(`commentInput-${id}`);
+            const content = input.value.trim();
+            if (!content) return;
+            const post = appData.taopians.find(p => p.id === id);
+            if (post) {
+                if (!post.comments) post.comments = [];
+                post.comments.push({ author: currentUser.username, content, time: Date.now() });
+                saveData(appData);
+                input.value = '';
+                renderTaopians();
+                document.getElementById(`comments-${id}`).style.display = 'block';
+            }
+        }
+
+        function toggleComments(id) {
+            const el = document.getElementById(`comments-${id}`);
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function deleteTaopian(id) {
+            if (!currentUser || currentUser.role !== 'owner') { alert('只有站长可以删除'); return; }
+            if (!confirm('确定删除吗？')) return;
+            appData.taopians = appData.taopians.filter(p => p.id !== id);
+            saveData(appData);
+            renderAll();
+        }
+
+        function renderTaopianPermission() {
+            const postBox = document.getElementById('taopianPostBox');
+            const lockMsg = document.getElementById('taopianLockMsg');
+            const isOwner = currentUser && currentUser.role === 'owner';
+            if (isOwner) { postBox.style.display = 'block';
+                lockMsg.style.display = 'none'; } else if (currentUser) { postBox.style.display = 'none';
+                lockMsg.style.display = 'block'; } else { postBox.style.display = 'none';
+                lockMsg.style.display = 'block';
+                lockMsg.innerHTML =
+                    `
+                        <div style="text-align:center;padding:12px;"><span style="font-size:28px;">🔒</span>
+                            <h3 style="color:#ff4d4f;margin:4px 0;font-size:16px;">仅站长可发布桃片</h3>
+                            <p style="color:#888;font-size:13px;">请 <a href="javascript:void(0)" onclick="openLogin()" style="color:#1a73e8;">登录</a> 后浏览</p>
+                        </div>
+                    `; }
+        }
+
+        function renderTaopians() {
+            const container = document.getElementById('taopianList');
+            const list = appData.taopians;
+            document.getElementById('taopianCount').textContent = list.length;
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">🍑</div><p>还没有桃片</p></div>`;
+                return;
+            }
+            container.innerHTML = list.slice().reverse().map(p => `
+                    <div class="list-item" style="flex-direction:column;align-items:stretch;">
+                        <div class="main">
+                            <div class="meta">
+                                <span class="author">${p.author}</span>
+                                ${p.author === 'lyx20131111' || getUserByName(p.author)?.role === 'owner' ? '<span class="tag tag-red" style="font-size:10px;">站长</span>' : ''}
+                                <span>${formatTime(p.time)}</span>
+                            </div>
+                            <div class="title" style="margin-top:4px;font-weight:400;">${renderMarkdown(p.content)}</div>
+                            <div style="margin-top:6px;display:flex;gap:14px;font-size:13px;color:#888;">
+                                <span style="cursor:pointer;" onclick="likeTaopian(${p.id})">❤️ ${p.likes || 0}</span>
+                                <span style="cursor:pointer;" onclick="toggleComments(${p.id})">💬 ${(p.comments || []).length}</span>
+                                ${currentUser && p.author === currentUser.username && currentUser.role === 'owner' ? `<span style="cursor:pointer;color:#ff4d4f;" onclick="deleteTaopian(${p.id})">删除</span>` : ''}
+                            </div>
+                            <div id="comments-${p.id}" style="display:none;margin-top:8px;">
+                                ${(p.comments || []).map(c => `
+                                    <div class="comment">
+                                        <span class="author">${c.author}</span>
+                                        <span class="time">${formatTime(c.time)}</span>
+                                        <div class="content">${c.content}</div>
+                                    </div>
+                                `).join('')}
+                                ${currentUser ? `
+                                    <div style="display:flex;gap:8px;margin-top:6px;">
+                                        <input type="text" id="commentInput-${p.id}" placeholder="写评论..." style="flex:1;padding:4px 10px;border:1.5px solid #d9dde3;border-radius:4px;font-size:13px;outline:none;">
+                                        <button class="btn btn-sm btn-primary" onclick="commentTaopian(${p.id})" style="background:#1a73e8;color:#fff;">评论</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function renderDiscusses() {
+            const container = document.getElementById('discussList');
+            const list = appData.discusses;
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">💬</div><p>还没有讨论</p></div>`;
+                return;
+            }
+            container.innerHTML = list.slice().reverse().map(d => `
+                    <div class="list-item" style="flex-direction:column;align-items:stretch;">
+                        <div class="main">
+                            <div class="meta">
+                                <span class="author">${d.author}</span>
+                                <span class="tag tag-blue">${d.category}</span>
+                                <span>${formatTime(d.time)}</span>
+                            </div>
+                            <div class="title" style="margin-top:2px;">${d.title}</div>
+                            <div style="font-size:14px;color:#555;margin-top:4px;">${renderMarkdown(d.content.substring(0, 120))}${d.content.length > 120 ? '...' : ''}</div>
+                            <div style="margin-top:6px;font-size:13px;color:#888;display:flex;gap:12px;">
+                                <span>💬 ${d.replies || 0} 回复</span>
+                                ${currentUser && d.author === currentUser.username ? `<span style="cursor:pointer;color:#ff4d4f;" onclick="deleteDiscuss(${d.id})">删除</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function renderBenbens() {
+            const container = document.getElementById('benbenList');
+            const list = appData.benbens;
+            document.getElementById('benbenTotal').textContent = list.length;
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">🐂</div><p>还没有犇犇</p></div>`;
+                return;
+            }
+            container.innerHTML = list.slice().reverse().map(b => `
+                    <div class="benben-item">
+                        <div class="header">
+                            <span class="author">${b.author}</span>
+                            <span class="time">${formatTime(b.time)}</span>
+                        </div>
+                        <div class="content">${b.content}</div>
+                        <div class="actions">
+                            <span onclick="likeBenben(${b.id})">❤️ ${b.likes || 0}</span>
+                            ${currentUser && b.author === currentUser.username ? `<span style="color:#ff4d4f;" onclick="deleteBenben(${b.id})">删除</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function renderProblems() {
+            const container = document.getElementById('problemList');
+            const list = appData.problems;
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>暂无题目</p></div>`;
+                return;
+            }
+            const diffMap = { easy: 'tag-green', mid: 'tag-orange', hard: 'tag-red' };
+            const diffLabel = { easy: '简单', mid: '中等', hard: '困难' };
+            container.innerHTML = list.map(p => `
+                    <div class="problem-item">
+                        <div class="info">
+                            <div class="title">${p.title}</div>
+                            <div class="meta">${p.category} · 添加者: ${p.author}</div>
+                            <div class="tags">
+                                <span class="tag ${diffMap[p.difficulty] || ''}">${diffLabel[p.difficulty] || '未知'}</span>
+                                <span class="tag tag-blue">${p.category}</span>
+                            </div>
+                            <div style="font-size:13px;color:#666;margin-top:4px;">${p.desc}</div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                            <span class="status ${p.solved ? 'solved' : 'unsolved'}">${p.solved ? '✅ 已解决' : '⬜ 未解决'}</span>
+                            <div style="display:flex;gap:4px;">
+                                ${currentUser ? `<button class="btn btn-sm" style="background:#e6f7e6;color:#52c41a;" onclick="toggleSolved(${p.id})">${p.solved ? '撤销' : '通过'}</button>` : ''}
+                                ${currentUser && (currentUser.role === 'owner' || p.author === currentUser.username) ? `<button class="btn btn-sm" style="background:#fde8e8;color:#ff4d4f;" onclick="deleteProblem(${p.id})">删除</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function renderArticles() {
+            const container = document.getElementById('articleList');
+            const list = appData.articles;
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📝</div><p>还没有文章</p></div>`;
+                return;
+            }
+            container.innerHTML = list.slice().reverse().map(a => `
+                    <div class="list-item" style="flex-direction:column;align-items:stretch;cursor:pointer;" onclick="viewArticle(${a.id})">
+                        <div class="main">
+                            <div class="title">${a.title}</div>
+                            <div class="meta">
+                                <span class="author">${a.author}</span>
+                                <span>${formatTime(a.time)}</span>
+                                <span>👁️ ${a.views || 0}</span>
+                            </div>
+                            <div style="display:flex;gap:4px;flex-wrap:wrap;margin:4px 0;">${(a.tags || []).map(t => `<span class="tag tag-blue">${t}</span>`).join('')}</div>
+                            <div style="font-size:14px;color:#666;">${a.content.substring(0, 100)}${a.content.length > 100 ? '...' : ''}</div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('msgList');
+            if (!currentUser) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">🔒</div><p>请登录查看私信</p></div>`;
+                return;
+            }
+            const list = appData.messages.filter(m => m.to === currentUser.username || m.from === currentUser.username);
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">✉️</div><p>暂无消息</p></div>`;
+                return;
+            }
+            container.innerHTML = list.map(m => {
+                const isUnread = !m.read && m.to === currentUser.username;
+                return `
+                        <div class="msg-item" onclick="viewMsg(${m.id})">
+                            <div>${isUnread ? '<span class="unread"></span>' : ''}<span class="sender">${m.from}</span><span style="color:#888;font-size:12px;">→ ${m.to}</span></div>
+                            <span class="preview">${m.content.substring(0, 40)}${m.content.length > 40 ? '...' : ''}</span>
+                            <span class="time">${formatTime(m.time)}</span>
+                        </div>
+                    `;
+            }).join('');
+        }
+
+        // ============================================================
+        // 操作函数
+        // ============================================================
+        function openNewDiscuss() {
+            if (!currentUser) { alert('请先登录'); return; }
+            document.getElementById('newDiscussModal').classList.add('active');
+        }
+
+        function closeNewDiscuss() {
+            document.getElementById('newDiscussModal').classList.remove('active');
+        }
+
+        function submitDiscuss() {
+            if (!currentUser) return;
+            const title = document.getElementById('discussTitle').value.trim();
+            const content = document.getElementById('discussContent').value.trim();
+            const category = document.getElementById('discussCategorySelect').value;
+            if (!title || !content) { alert('标题和内容不能为空'); return; }
+            appData.discusses.push({
+                id: appData.nextId.discuss++,
+                author: currentUser.username,
+                title,
+                category,
+                content,
+                time: Date.now(),
+                replies: 0
+            });
+            saveData(appData);
+            closeNewDiscuss();
+            document.getElementById('discussTitle').value = '';
+            document.getElementById('discussContent').value = '';
+            renderAll();
+        }
+
+        function deleteDiscuss(id) {
+            if (!confirm('确定删除吗？')) return;
+            appData.discusses = appData.discusses.filter(d => d.id !== id);
+            saveData(appData);
+            renderAll();
+        }
+
+        function publishBenben() {
+            if (!currentUser) { alert('请先登录'); return; }
+            const input = document.getElementById('benbenInput');
+            const content = input.value.trim();
+            if (!content) { alert('内容不能为空'); return; }
+            appData.benbens.push({
+                id: appData.nextId.benben++,
+                author: currentUser.username,
+                content,
+                time: Date.now(),
+                likes: 0
+            });
+            saveData(appData);
+            input.value = '';
+            renderAll();
+            document.getElementById('benbenCount').textContent = '0';
+        }
+
+        function likeBenben(id) {
+            if (!currentUser) { alert('请先登录'); return; }
+            const b = appData.benbens.find(b => b.id === id);
+            if (b) { b.likes = (b.likes || 0) + 1;
+                saveData(appData);
+                renderAll(); }
+        }
+
+        function deleteBenben(id) {
+            if (!confirm('确定删除吗？')) return;
+            appData.benbens = appData.benbens.filter(b => b.id !== id);
+            saveData(appData);
+            renderAll();
+        }
+
+        function openNewProblem() {
+            if (!currentUser) { alert('请先登录'); return; }
+            document.getElementById('newProblemModal').classList.add('active');
+        }
+
+        function closeNewProblem() {
+            document.getElementById('newProblemModal').classList.remove('active');
+        }
+
+        function submitProblem() {
+            if (!currentUser) return;
+            const title = document.getElementById('probTitle').value.trim();
+            const category = document.getElementById('probCategorySelect').value;
+            const difficulty = document.getElementById('probDifficultySelect').value;
+            const desc = document.getElementById('probDesc').value.trim();
+            if (!title || !desc) { alert('题目名称和描述不能为空'); return; }
+            appData.problems.push({
+                id: appData.nextId.problem++,
+                title,
+                category,
+                difficulty,
+                desc,
+                author: currentUser.username,
+                solved: false
+            });
+            saveData(appData);
+            closeNewProblem();
+            document.getElementById('probTitle').value = '';
+            document.getElementById('probDesc').value = '';
+            renderAll();
+        }
+
+        function deleteProblem(id) {
+            if (!confirm('确定删除此题吗？')) return;
+            appData.problems = appData.problems.filter(p => p.id !== id);
+            saveData(appData);
+            renderAll();
+        }
+
+        function toggleSolved(id) {
+            const p = appData.problems.find(p => p.id === id);
+            if (p) { p.solved = !p.solved;
+                saveData(appData);
+                renderAll(); }
+        }
+
+        function openNewArticle() {
+            if (!currentUser) { alert('请先登录'); return; }
+            document.getElementById('newArticleModal').classList.add('active');
+        }
+
+        function closeNewArticle() {
+            document.getElementById('newArticleModal').classList.remove('active');
+        }
+
+        function submitArticle() {
+            if (!currentUser) return;
+            const title = document.getElementById('articleTitle').value.trim();
+            const content = document.getElementById('articleContent').value.trim();
+            const tagsRaw = document.getElementById('articleTags').value.trim();
+            if (!title || !content) { alert('标题和内容不能为空'); return; }
+            const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+            appData.articles.push({
+                id: appData.nextId.article++,
+                author: currentUser.username,
+                title,
+                tags,
+                content,
+                time: Date.now(),
+                views: 0
+            });
+            saveData(appData);
+            closeNewArticle();
+            document.getElementById('articleTitle').value = '';
+            document.getElementById('articleContent').value = '';
+            document.getElementById('articleTags').value = '';
+            renderAll();
+        }
+
+        function viewArticle(id) {
+            const a = appData.articles.find(a => a.id === id);
+            if (a) { a.views = (a.views || 0) + 1;
+                saveData(appData);
+                renderAll(); }
+            alert(`📝 ${a.title}\n\n作者：${a.author}\n标签：${(a.tags || []).join(', ')}\n\n${a.content}`);
+        }
+
+        function openNewMsg() {
+            if (!currentUser) { alert('请先登录'); return; }
+            document.getElementById('newMsgModal').classList.add('active');
+        }
+
+        function closeNewMsg() {
+            document.getElementById('newMsgModal').classList.remove('active');
+        }
+
+        function sendMsg() {
+            if (!currentUser) return;
+            const to = document.getElementById('msgTarget').value.trim();
+            const content = document.getElementById('msgContent').value.trim();
+            if (!to || !content) { alert('收件人和内容不能为空'); return; }
+            if (!getUserByName(to)) { alert('用户不存在'); return; }
+            appData.messages.push({
+                id: appData.nextId.msg++,
+                from: currentUser.username,
+                to,
+                content,
+                time: Date.now(),
+                read: false
+            });
+            saveData(appData);
+            closeNewMsg();
+            document.getElementById('msgTarget').value = '';
+            document.getElementById('msgContent').value = '';
+            renderAll();
+            alert('✅ 私信已发送');
+        }
+
+        function viewMsg(id) {
+            const m = appData.messages.find(m => m.id === id);
+            if (m && m.to === currentUser?.username) {
+                m.read = true;
+                saveData(appData);
+                renderAll();
+            }
+            alert(`✉️ 来自 ${m.from}\n\n${m.content}`);
+        }
+
+        function openProfileEdit() {
+            if (!currentUser) return;
+            const user = getUserByName(currentUser.username);
+            document.getElementById('editBio').value = user.bio || '';
+            document.getElementById('editSignature').value = user.signature || '';
+            document.getElementById('profileEditModal').classList.add('active');
+        }
+
+        function closeProfileEdit() {
+            document.getElementById('profileEditModal').classList.remove('active');
+        }
+
+        function saveProfile() {
+            if (!currentUser) return;
+            const user = getUserByName(currentUser.username);
+            user.bio = document.getElementById('editBio').value.trim() || '这个人很懒，什么都没写';
+            user.signature = document.getElementById('editSignature').value.trim() || '✨ 暂无签名';
+            saveData(appData);
+            closeProfileEdit();
+            renderAll();
+            alert('✅ 个人资料已更新');
+        }
+
+        // -- 改名 --
+        function openRename() {
+            if (!currentUser) return;
+            document.getElementById('renameInput').value = currentUser.username;
+            document.getElementById('renameModal').classList.add('active');
+        }
+
+        function closeRename() {
+            document.getElementById('renameModal').classList.remove('active');
+        }
+
+        function confirmRename() {
+            if (!currentUser) return;
+            const newName = document.getElementById('renameInput').value.trim();
+            if (!newName || newName.length < 2) { alert('用户名至少2个字符'); return; }
+            if (newName.length > 20) { alert('用户名不能超过20个字符'); return; }
+            if (!/^[\u4e00-\u9fa5a-zA-Z0-9_]+$/.test(newName)) {
+                alert('用户名只能包含字母、数字、下划线和中文');
+                return;
+            }
+            if (getUserByName(newName)) { alert('用户名已存在'); return; }
+            const oldName = currentUser.username;
+
+            // 更新用户
+            const user = getUserByName(oldName);
+            user.username = newName;
+
+            // 更新所有关联数据
+            appData.taopians.forEach(p => { if (p.author === oldName) p.author = newName; });
+            appData.taopians.forEach(p => {
+                if (p.comments) {
+                    p.comments.forEach(c => { if (c.author === oldName) c.author = newName; });
+                }
+            });
+            appData.discusses.forEach(d => { if (d.author === oldName) d.author = newName; });
+            appData.benbens.forEach(b => { if (b.author === oldName) b.author = newName; });
+            appData.articles.forEach(a => { if (a.author === oldName) a.author = newName; });
+            appData.problems.forEach(p => { if (p.author === oldName) p.author = newName; });
+            appData.messages.forEach(m => {
+                if (m.from === oldName) m.from = newName;
+                if (m.to === oldName) m.to = newName;
+            });
+
+            currentUser.username = newName;
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                id: user.id,
+                username: user.username,
+                password: user.password,
+                role: user.role
+            }));
+            saveData(appData);
+            closeRename();
+            renderAll();
+            alert(`✅ 用户名已修改为 "${newName}"`);
+        }
+
+        // -- 修改密码 --
+        function openChangePassword() {
+            if (!currentUser) {
+                alert('请先登录');
+                return;
+            }
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword1').value = '';
+            document.getElementById('newPassword2').value = '';
+            document.getElementById('changePasswordModal').classList.add('active');
+        }
+
+        function closeChangePassword() {
+            document.getElementById('changePasswordModal').classList.remove('active');
+        }
+
+        function confirmChangePassword() {
+            if (!currentUser) return;
+
+            const oldPwd = document.getElementById('oldPassword').value.trim();
+            const newPwd1 = document.getElementById('newPassword1').value.trim();
+            const newPwd2 = document.getElementById('newPassword2').value.trim();
+
+            // 验证旧密码
+            const user = getUserByName(currentUser.username);
+            if (user.password !== oldPwd) {
+                alert('❌ 当前密码错误');
+                return;
+            }
+
+            // 验证新密码
+            if (!newPwd1 || newPwd1.length < 6) {
+                alert('❌ 新密码至少需要 6 个字符');
+                return;
+            }
+            if (newPwd1 !== newPwd2) {
+                alert('❌ 两次输入的新密码不一致');
+                return;
+            }
+            if (newPwd1 === oldPwd) {
+                alert('❌ 新密码不能与旧密码相同');
+                return;
+            }
+
+            // 更新密码
+            user.password = newPwd1;
+
+            // 更新 sessionStorage
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                id: user.id,
+                username: user.username,
+                password: user.password,
+                role: user.role
+            }));
+
+            saveData(appData);
+            closeChangePassword();
+            alert('✅ 密码修改成功！');
+        }
+
+        // -- 登录 --
+        function openLogin() {
+            document.getElementById('loginModal').classList.add('active');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function closeLogin() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const user = appData.users.find(u => u.username === username && u.password === password);
+            if (!user) { alert('❌ 用户名或密码错误'); return; }
+            currentUser = user;
+            sessionStorage.setItem('currentUser', JSON.stringify({ id: user.id, username: user.username, password: user
+                    .password, role: user.role }));
+            closeLogin();
+            renderAll();
+        }
+
+        function logout() {
+            currentUser = null;
+            sessionStorage.removeItem('currentUser');
+            renderAll();
+        }
+
+        function openRegister() {
+            document.getElementById('registerModal').classList.add('active');
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+        }
+
+        function closeRegister() {
+            document.getElementById('registerModal').classList.remove('active');
+        }
+
+        function register() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            if (!username || !password) { alert('用户名和密码不能为空'); return; }
+            if (getUserByName(username)) { alert('用户名已存在'); return; }
+            const newUser = {
+                id: appData.nextId.user++,
+                username,
+                password,
+                role: 'user',
+                bio: '这个人很懒，什么都没写',
+                signature: '✨ 暂无签名'
+            };
+            appData.users.push(newUser);
+            saveData(appData);
+            closeRegister();
+            currentUser = newUser;
+            sessionStorage.setItem('currentUser', JSON.stringify({ id: newUser.id, username: newUser.username, password: newUser
+                    .password, role: newUser.role }));
+            renderAll();
+            alert('✅ 注册成功！已自动登录');
+        }
+
+        function insertMarkdown(textareaId, prefix, suffix) {
+            const el = document.getElementById(textareaId);
+            const start = el.selectionStart;
+            const end = el.selectionEnd;
+            const text = el.value;
+            const selected = text.substring(start, end);
+            el.value = text.substring(0, start) + prefix + selected + suffix + text.substring(end);
+            el.focus();
+            el.setSelectionRange(start + prefix.length + selected.length + suffix.length, start + prefix.length + selected
+                .length + suffix.length);
+        }
+
+        // ============================================================
+        // 团队标签页切换
+        // ============================================================
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('tab') && e.target.closest('#page-team')) {
+                document.querySelectorAll('#page-team .tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                document.querySelectorAll('#page-team .tab-content').forEach(tc => tc.classList.remove('active'));
+                document.getElementById(e.target.dataset.tab).classList.add('active');
+                if (e.target.dataset.tab === 'tab-members') renderTeamMembers();
+                if (e.target.dataset.tab === 'tab-all') renderAllTeams();
+            }
+        });
+
+        // ============================================================
+        // 初始化
+        // ============================================================
+
+        restoreSession();
+
+        document.getElementById('benbenInput')?.addEventListener('input', function() {
+            document.getElementById('benbenCount').textContent = this.value.length;
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(el => {
+            el.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+        });
+
+        renderAll();
+        console.log('👑 站长账号: lyx20131111 / 密码: 20131111');
+        console.log('✅ 团队功能已上线！');
+        console.log('✅ 改名功能已上线！');
+        console.log('✅ 修改密码功能已上线！');
+    </script>
+</body>
+</html>
