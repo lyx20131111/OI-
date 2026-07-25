@@ -36,8 +36,6 @@
         .btn-sm{padding:3px 12px;font-size:12px;border-radius:4px}
         .btn-warning{background:#faad14;color:#fff}
         .btn-warning:hover{background:#e09e0e}
-        .btn-info{background:#17a2b8;color:#fff}
-        .btn-info:hover{background:#138496}
         .container{max-width:1140px;margin:0 auto;padding:20px 16px 40px}
         .page{display:none}
         .page.active{display:block}
@@ -166,7 +164,12 @@
         .comp-status.ongoing{background:#52c41a;color:#fff}
         .comp-status.upcoming{background:#faad14;color:#fff}
         .comp-status.ended{background:#f0f2f5;color:#666}
-        @media(max-width:768px){.navbar{padding:0 12px;height:auto;min-height:50px;padding:6px 12px}.navbar-links a{padding:4px 10px;font-size:12px}.navbar-logo{font-size:17px}.hero{padding:18px 20px}.hero h1{font-size:20px}.card{padding:14px 16px}.stat-grid{grid-template-columns:repeat(2,1fr);gap:10px}.profile-card .profile-header{flex-direction:column;text-align:center}.profile-card .info .stats{justify-content:center}.modal{padding:18px 20px}.list-item{flex-direction:column;align-items:stretch}.team-item{flex-direction:column;align-items:stretch}.team-actions{margin-top:6px}}
+        .testcase-item{display:flex;gap:8px;margin-bottom:6px;align-items:center;flex-wrap:wrap;background:#f8f9fa;padding:6px 10px;border-radius:4px}
+        .testcase-item .tc-label{font-size:12px;color:#888;min-width:60px}
+        .testcase-item input{flex:1;padding:4px 10px;border:1.5px solid #d9dde3;border-radius:4px;font-size:12px;outline:none;min-width:80px}
+        .testcase-item input:focus{border-color:#1a73e8}
+        .testcase-item .btn{font-size:11px;padding:2px 10px}
+        @media(max-width:768px){.navbar{padding:0 12px;height:auto;min-height:50px;padding:6px 12px}.navbar-links a{padding:4px 10px;font-size:12px}.navbar-logo{font-size:17px}.hero{padding:18px 20px}.hero h1{font-size:20px}.card{padding:14px 16px}.stat-grid{grid-template-columns:repeat(2,1fr);gap:10px}.profile-card .profile-header{flex-direction:column;text-align:center}.profile-card .info .stats{justify-content:center}.modal{padding:18px 20px}.list-item{flex-direction:column;align-items:stretch}.team-item{flex-direction:column;align-items:stretch}.team-actions{margin-top:6px}.testcase-item{flex-direction:column;align-items:stretch}.testcase-item .tc-label{min-width:auto}}
         @media(max-width:480px){.navbar-links a{font-size:11px;padding:3px 8px}.navbar-logo{font-size:14px}.navbar-logo img{height:24px;width:24px}.stat-grid{grid-template-columns:1fr 1fr}.stat-card .num{font-size:18px}.hero h1{font-size:17px}}
     </style>
 </head>
@@ -315,9 +318,14 @@
                 </div>
                 <div class="tab-content" id="tab-members">
                     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-                        <select id="manageTeamSelect" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:150px;" onchange="renderTeamMembers()"><option value="">选择团队</option></select>
+                        <select id="manageTeamSelect" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:150px;" onchange="renderTeamMembers()">
+                            <option value="">-- 请选择团队 --</option>
+                        </select>
+                        <span id="teamSelectHint" style="font-size:13px;color:#999;align-self:center;">（请先创建或加入团队）</span>
                     </div>
-                    <div id="memberList"></div>
+                    <div id="memberList">
+                        <div class="empty-state"><div class="icon">👥</div><p>请选择一个团队查看成员</p></div>
+                    </div>
                 </div>
                 <div class="tab-content" id="tab-team-problems">
                     <div id="teamProblemList"></div>
@@ -363,9 +371,10 @@
             </div>
         </div>
 
+        <!-- ===== 管理后台 ===== -->
         <div class="page" id="page-admin">
             <div class="card">
-                <div class="card-title">⚙️ 管理后台 <span class="badge badge-red">站长专属</span></div>
+                <div class="card-title">⚙️ 管理后台 <span class="badge badge-red">站长/管理员</span></div>
                 <div class="admin-stats" id="adminStats">
                     <div class="stat"><div class="num" id="adminUserCount">0</div><div class="label">注册用户</div></div>
                     <div class="stat"><div class="num" id="adminTaopianCount">0</div><div class="label">桃片</div></div>
@@ -378,28 +387,74 @@
             <div class="card">
                 <div class="card-title">📋 内容管理</div>
                 <div class="tabs">
-                    <button class="tab active" data-tab="admin-taopians">桃片</button>
-                    <button class="tab" data-tab="admin-discusses">讨论</button>
-                    <button class="tab" data-tab="admin-problems">题目</button>
-                    <button class="tab" data-tab="admin-articles">文章</button>
-                    <button class="tab" data-tab="admin-competitions">比赛</button>
+                    <button class="tab" data-tab="admin-taopians">🍑 桃片</button>
+                    <button class="tab" data-tab="admin-discusses">💬 讨论</button>
+                    <button class="tab active" data-tab="admin-problems">📚 题目</button>
+                    <button class="tab" data-tab="admin-articles">📝 文章</button>
+                    <button class="tab" data-tab="admin-competitions">🏆 比赛</button>
                 </div>
-                <div class="tab-content active" id="admin-taopians"><div id="adminTaopianList"></div></div>
+
+                <div class="tab-content" id="admin-taopians"><div id="adminTaopianList"></div></div>
                 <div class="tab-content" id="admin-discusses"><div id="adminDiscussList"></div></div>
-                <div class="tab-content" id="admin-problems">
-                    <div id="adminProblemList"></div>
-                    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-                        <input type="text" id="adminProbTitle" placeholder="题目名称" style="flex:1;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:120px;">
-                        <select id="adminProbCategory" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
-                            <option value="算法">算法</option><option value="数据结构">数据结构</option><option value="数学">数学</option><option value="字符串">字符串</option><option value="图论">图论</option><option value="动态规划">动态规划</option>
-                        </select>
-                        <select id="adminProbDifficulty" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
-                            <option value="easy">简单</option><option value="mid">中等</option><option value="hard">困难</option>
-                        </select>
-                        <input type="text" id="adminProbDesc" placeholder="题目描述" style="flex:2;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:150px;">
-                        <button class="btn btn-success" onclick="adminAddProblem()">添加题目</button>
+
+                <!-- ===== 题目管理（含测试点） ===== -->
+                <div class="tab-content active" id="admin-problems">
+                    <div class="card-title" style="font-size:14px;margin-bottom:12px;">📚 题目管理</div>
+
+                    <!-- 添加单道题 -->
+                    <div style="background:#f8f9fa;border-radius:6px;padding:14px;margin-bottom:12px;">
+                        <div style="font-weight:600;font-size:14px;color:#1a1a2e;margin-bottom:8px;">➕ 添加题目</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                            <input type="text" id="adminProbTitle" placeholder="题目名称" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
+                            <input type="text" id="adminProbDesc" placeholder="题目描述" style="padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;">
+                        </div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+                            <select id="adminProbCategory" style="flex:1;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:100px;">
+                                <option value="算法">算法</option><option value="数据结构">数据结构</option><option value="数学">数学</option><option value="字符串">字符串</option><option value="图论">图论</option><option value="动态规划">动态规划</option>
+                            </select>
+                            <select id="adminProbDifficulty" style="flex:1;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;min-width:100px;">
+                                <option value="easy">简单</option><option value="mid">中等</option><option value="hard">困难</option>
+                            </select>
+                        </div>
+
+                        <!-- 测试数据 -->
+                        <div style="background:#fff;border:1px solid #e8ecf1;border-radius:6px;padding:12px;margin-bottom:8px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                <span style="font-weight:600;font-size:13px;color:#1a1a2e;">🧪 测试数据</span>
+                                <button class="btn btn-sm btn-success" onclick="addTestCase()" style="font-size:12px;">➕ 添加测试点</button>
+                            </div>
+                            <div id="testCaseContainer">
+                                <div id="testCaseList"></div>
+                            </div>
+                            <div style="font-size:12px;color:#999;margin-top:4px;">💡 每个测试点包含输入和输出，用于验证代码正确性</div>
+                        </div>
+
+                        <button class="btn btn-success" onclick="adminAddProblemWithTest()">➕ 添加题目</button>
+                        <span id="adminAddResult" style="margin-left:10px;font-size:13px;color:#52c41a;"></span>
                     </div>
+
+                    <!-- 批量添加 -->
+                    <div style="background:#f8f9fa;border-radius:6px;padding:14px;margin-bottom:12px;">
+                        <div style="font-weight:600;font-size:14px;color:#1a1a2e;margin-bottom:8px;">📥 批量添加</div>
+                        <div style="font-size:12px;color:#888;margin-bottom:4px;">每行一道题，格式：<b>名称 | 分类 | 难度 | 描述</b></div>
+                        <textarea id="batchProblemInput" placeholder="A + B 问题 | 算法 | easy | 输入两个整数 a 和 b，输出 a+b 的值" style="width:100%;min-height:60px;padding:8px 12px;border:1.5px solid #d9dde3;border-radius:6px;font-size:13px;outline:none;font-family:inherit;resize:vertical;"></textarea>
+                        <button class="btn btn-success" onclick="batchAddProblems()" style="margin-top:6px;font-size:12px;">📥 批量导入</button>
+                        <span id="batchResult" style="margin-left:10px;font-size:13px;color:#52c41a;"></span>
+                    </div>
+
+                    <!-- 快速添加示例 -->
+                    <div style="background:#e8f0fe;border-radius:6px;padding:14px;margin-bottom:12px;border:1px solid #1a73e8;">
+                        <div style="font-weight:600;font-size:14px;color:#1a73e8;margin-bottom:8px;">🚀 快速添加示例数据</div>
+                        <div style="font-size:13px;color:#666;margin-bottom:8px;">一键添加 10 道经典算法题目（含测试数据）</div>
+                        <button class="btn btn-primary" onclick="addSampleProblemsWithTest()" style="background:#1a73e8;color:#fff;">📥 添加示例题目</button>
+                        <span id="sampleResult" style="margin-left:10px;font-size:13px;color:#52c41a;"></span>
+                    </div>
+
+                    <!-- 题目列表 -->
+                    <div style="font-weight:600;font-size:14px;color:#1a1a2e;margin-bottom:8px;">📋 题目列表 <span class="badge" id="adminProblemCount">0</span></div>
+                    <div id="adminProblemList"></div>
                 </div>
+
                 <div class="tab-content" id="admin-articles"><div id="adminArticleList"></div></div>
                 <div class="tab-content" id="admin-competitions"><div id="adminCompetitionList"></div></div>
             </div>
@@ -443,38 +498,7 @@
                     { id: 1, username: 'lyx20131111', password: '20131111', role: 'owner', bio: 'OI 社区站长', signature: '代码改变世界' }
                 ],
                 teams: [],
-                problems: [
-                    { id: 1, title: 'A + B 问题', category: '算法', difficulty: 'easy', desc: '输入两个整数 a 和 b，输出 a+b 的值', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 2, title: '快速排序', category: '算法', difficulty: 'mid', desc: '给定一个长度为 n 的数组，使用快速排序将其升序排列', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 3, title: '二分查找', category: '算法', difficulty: 'easy', desc: '在一个有序数组中查找目标值，返回其下标，不存在则返回 -1', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 4, title: '归并排序', category: '算法', difficulty: 'mid', desc: '给定一个长度为 n 的数组，使用归并排序将其升序排列', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 5, title: 'KMP 字符串匹配', category: '算法', difficulty: 'hard', desc: '给定文本串和模式串，使用 KMP 算法查找模式串在文本串中的所有出现位置', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 6, title: '栈的实现', category: '数据结构', difficulty: 'easy', desc: '实现一个栈，支持 push、pop、top 和 empty 操作', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 7, title: '队列的实现', category: '数据结构', difficulty: 'easy', desc: '实现一个队列，支持 push、pop、front 和 empty 操作', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 8, title: '链表反转', category: '数据结构', difficulty: 'mid', desc: '给定一个单链表，将其反转并返回新的头节点', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 9, title: '并查集', category: '数据结构', difficulty: 'mid', desc: '实现并查集，支持 find 和 union 操作，判断两个元素是否在同一集合', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 10, title: '线段树', category: '数据结构', difficulty: 'hard', desc: '实现线段树，支持区间求和和单点修改操作', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 11, title: '爬楼梯', category: '动态规划', difficulty: 'easy', desc: '每次可以爬 1 或 2 个台阶，爬到第 n 阶有多少种方法', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 12, title: '最长上升子序列', category: '动态规划', difficulty: 'mid', desc: '给定一个整数数组，求最长严格上升子序列的长度', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 13, title: '背包问题', category: '动态规划', difficulty: 'hard', desc: '给定 n 个物品，每个物品有重量和价值，求在容量 W 内的最大价值', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 14, title: '最长公共子序列', category: '动态规划', difficulty: 'mid', desc: '给定两个字符串，求它们的最长公共子序列长度', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 15, title: '编辑距离', category: '动态规划', difficulty: 'hard', desc: '将字符串 A 变为字符串 B，最少需要多少次插入、删除、替换操作', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 16, title: '图的遍历', category: '图论', difficulty: 'easy', desc: '给定一个无向图，从起点出发进行 DFS 和 BFS 遍历', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 17, title: 'Dijkstra 最短路', category: '图论', difficulty: 'hard', desc: '给定一个带权有向图，求从起点到终点的最短路径', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 18, title: '拓扑排序', category: '图论', difficulty: 'mid', desc: '给定一个有向无环图，输出其拓扑排序序列', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 19, title: '最小生成树', category: '图论', difficulty: 'hard', desc: '给定一个加权无向图，使用 Kruskal 或 Prim 算法求最小生成树', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 20, title: 'Floyd 全源最短路', category: '图论', difficulty: 'hard', desc: '给定一个带权有向图，求任意两点之间的最短路径', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 21, title: '质数判断', category: '数学', difficulty: 'easy', desc: '判断一个整数是否为质数，时间复杂度 O(√n)', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 22, title: '最大公约数', category: '数学', difficulty: 'easy', desc: '使用辗转相除法求两个整数的最大公约数', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 23, title: '快速幂', category: '数学', difficulty: 'mid', desc: '计算 a^b mod m，使用快速幂算法，时间复杂度 O(log b)', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 24, title: '矩阵乘法', category: '数学', difficulty: 'hard', desc: '给定两个矩阵 A 和 B，计算它们的乘积', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 25, title: '高精度加法', category: '数学', difficulty: 'mid', desc: '输入两个超大整数，输出它们的和（高精度加法）', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 26, title: '字符串反转', category: '字符串', difficulty: 'easy', desc: '给定一个字符串，将其反转并输出', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 27, title: '最长回文子串', category: '字符串', difficulty: 'mid', desc: '给定一个字符串，求其最长的回文子串', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 28, title: 'Trie 前缀树', category: '字符串', difficulty: 'hard', desc: '实现 Trie 树，支持插入、查询前缀和搜索单词操作', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 29, title: '字符串哈希', category: '字符串', difficulty: 'mid', desc: '给定字符串，使用哈希算法快速判断两个子串是否相等', author: 'lyx20131111', solved: false, status: 'unsolved' },
-                    { id: 30, title: '正则表达式匹配', category: '字符串', difficulty: 'hard', desc: '实现支持 . 和 * 的正则表达式匹配', author: 'lyx20131111', solved: false, status: 'unsolved' }
-                ],
+                problems: [],
                 teamProblems: [],
                 teamCompetitions: [],
                 competitions: [],
@@ -494,7 +518,7 @@
                 messages: [
                     { id: 1, from: 'lyx20131111', to: 'user1', content: '你好！欢迎来到社区', time: Date.now() - 3600000, read: false }
                 ],
-                nextId: { taopian: 2, discuss: 2, benben: 2, article: 2, msg: 2, user: 2, problem: 31, team: 1, competition: 1 }
+                nextId: { taopian: 2, discuss: 2, benben: 2, article: 2, msg: 2, user: 2, problem: 1, team: 1, competition: 1 }
             };
         }
 
@@ -504,6 +528,7 @@
 
         let appData = getData();
         let currentUser = null;
+        let testCases = [];
 
         // ============================================================
         // 恢复登录状态
@@ -549,8 +574,7 @@
             document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
             const map = { 'home': '首页', 'taopian': '桃片', 'discuss': '讨论', 'benben': '犇犇', 'problems': '题库', 'article': '文章', 'team': '团队', 'competition': '比赛', 'admin': '管理', 'msg': '私信' };
             document.querySelectorAll('.navbar-links a').forEach(a => { if (a.textContent.includes(map[pageId] || '')) a.classList.add('active'); });
-            if (pageId === 'home') { renderHome();
-                renderProfileCard(); }
+            if (pageId === 'home') { renderHome(); renderProfileCard(); }
             if (pageId === 'taopian') renderTaopians();
             if (pageId === 'discuss') renderDiscusses();
             if (pageId === 'benben') renderBenbens();
@@ -579,6 +603,7 @@
             renderAdmin();
             renderMessages();
             renderTaopianPermission();
+            renderTeamSelects();
         }
 
         function renderHeader() {
@@ -681,26 +706,96 @@
         }
 
         function renderTeamSelects() {
-            if (!currentUser) return;
-            const myTeams = appData.teams.filter(t => t.ownerId === currentUser.id || t.members.some(m => m.userId === currentUser.id));
             const select1 = document.getElementById('inviteTeamSelect');
             const select2 = document.getElementById('manageTeamSelect');
-            const html = myTeams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
-            select1.innerHTML = `<option value="">选择团队</option>${html}`;
-            select2.innerHTML = `<option value="">选择团队</option>${html}`;
+            const hint = document.getElementById('teamSelectHint');
+
+            if (!currentUser) {
+                if (select1) select1.innerHTML = '<option value="">请先登录</option>';
+                if (select2) select2.innerHTML = '<option value="">请先登录</option>';
+                if (hint) hint.textContent = '（请先登录）';
+                return;
+            }
+
+            const myTeams = appData.teams.filter(t =>
+                t.ownerId === currentUser.id || t.members.some(m => m.userId === currentUser.id)
+            );
+
+            if (myTeams.length === 0) {
+                if (select1) select1.innerHTML = '<option value="">暂无团队</option>';
+                if (select2) select2.innerHTML = '<option value="">暂无团队</option>';
+                if (hint) hint.textContent = '（请先创建或加入团队）';
+                const memberList = document.getElementById('memberList');
+                if (memberList) memberList.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>你还没有加入任何团队</p></div>';
+                return;
+            }
+
+            if (hint) hint.textContent = '（共 ' + myTeams.length + ' 个团队）';
+
+            const options = myTeams.map(t =>
+                `<option value="${t.id}">${t.name}</option>`
+            ).join('');
+
+            if (select1) select1.innerHTML = `<option value="">选择团队</option>${options}`;
+            if (select2) select2.innerHTML = `<option value="">选择团队</option>${options}`;
         }
 
         function renderTeamMembers() {
             const container = document.getElementById('memberList');
             const teamId = parseInt(document.getElementById('manageTeamSelect').value);
-            if (!teamId) { container.innerHTML = '<div style="color:#999;font-size:13px;">请选择一个团队</div>'; return; }
+
+            if (!teamId) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>请选择一个团队查看成员</p></div>';
+                return;
+            }
+
             const team = getTeam(teamId);
-            if (!team) { container.innerHTML = '<div style="color:#999;font-size:13px;">团队不存在</div>'; return; }
+            if (!team) {
+                container.innerHTML = '<div style="color:#999;font-size:13px;">团队不存在</div>';
+                return;
+            }
+
             const canManage = currentUser && (team.ownerId === currentUser.id || isTeamAdmin(teamId, currentUser.id));
-            const allMembers = [{ userId: team.ownerId, role: 'owner' }, ...team.members];
+            const allMembers = [
+                { userId: team.ownerId, role: 'owner' },
+                ...team.members
+            ];
+
             const roleMap = { owner: '👑 队长', admin: '🔧 管理员', member: '👤 成员' };
             const roleClass = { owner: 'mrole owner', admin: 'mrole admin', member: 'mrole member' };
-            container.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:#f8f9fa;"><th style="padding:8px 10px;text-align:left;">用户</th><th style="padding:8px 10px;text-align:left;">角色</th><th style="padding:8px 10px;text-align:left;">操作</th></tr></thead><tbody>${allMembers.map(m => { const user = getUser(m.userId); if (!user) return ''; const isSelf = currentUser && currentUser.id === m.userId; const canAct = canManage && m.role !== 'owner' && !isSelf; return `<tr><td style="padding:6px 10px;">${user.username} ${isSelf ? '(你)' : ''}</td><td style="padding:6px 10px;"><span class="${roleClass[m.role] || 'mrole member'}">${roleMap[m.role] || '成员'}</span></td><td style="padding:6px 10px;">${canAct ? `${m.role === 'admin' ? `<button class="btn btn-sm" style="background:#f0f2f5;color:#555;" onclick="setMemberRole(${teamId},${m.userId},'member')">降为成员</button>` : ''}${m.role === 'member' ? `<button class="btn btn-sm" style="background:#e8f0fe;color:#1a73e8;" onclick="setMemberRole(${teamId},${m.userId},'admin')">设为管理</button>` : ''}<button class="btn btn-sm" style="background:#fde8e8;color:#ff4d4f;" onclick="removeMember(${teamId},${m.userId})">移除</button>` : (m.role === 'owner' ? '<span style="color:#999;font-size:12px;">不可操作</span>' : '')}</td></tr>`; }).join('')}</tbody></table>`;
+
+            if (allMembers.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>该团队暂无成员</p></div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="font-weight:600;font-size:14px;color:#1a1a2e;margin-bottom:8px;">📋 ${team.name} 成员列表（${allMembers.length} 人）</div>
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead><tr style="background:#f8f9fa;"><th style="padding:8px 10px;text-align:left;">用户</th><th style="padding:8px 10px;text-align:left;">角色</th><th style="padding:8px 10px;text-align:left;">操作</th></tr></thead>
+                    <tbody>
+                        ${allMembers.map(m => {
+                            const user = getUser(m.userId);
+                            if (!user) return '';
+                            const isSelf = currentUser && currentUser.id === m.userId;
+                            const canAct = canManage && m.role !== 'owner' && !isSelf;
+                            return `
+                                <tr>
+                                    <td style="padding:6px 10px;color:${getUserColor(user.username)};font-weight:${isSelf ? '600' : '400'};">${user.username} ${isSelf ? '（你）' : ''}</td>
+                                    <td style="padding:6px 10px;"><span class="${roleClass[m.role] || 'mrole member'}">${roleMap[m.role] || '成员'}</span></td>
+                                    <td style="padding:6px 10px;">
+                                        ${canAct ? `
+                                            ${m.role === 'admin' ? `<button class="btn btn-sm" style="background:#f0f2f5;color:#555;" onclick="setMemberRole(${teamId},${m.userId},'member')">降为成员</button>` : ''}
+                                            ${m.role === 'member' ? `<button class="btn btn-sm" style="background:#e8f0fe;color:#1a73e8;" onclick="setMemberRole(${teamId},${m.userId},'admin')">设为管理</button>` : ''}
+                                            <button class="btn btn-sm" style="background:#fde8e8;color:#ff4d4f;" onclick="removeMember(${teamId},${m.userId})">移除</button>
+                                        ` : (m.role === 'owner' ? '<span style="color:#999;font-size:12px;">不可操作</span>' : '')}
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
         }
 
         // ============================================================
@@ -797,11 +892,22 @@
             const desc = document.getElementById('teamDesc').value.trim();
             if (!name) { alert('请输入团队名称'); return; }
             if (appData.teams.find(t => t.name === name)) { alert('团队名称已存在'); return; }
-            appData.teams.push({ id: appData.nextId.team++, name, desc, ownerId: currentUser.id, members: [], createdAt: Date.now() });
+
+            appData.teams.push({
+                id: appData.nextId.team++,
+                name,
+                desc,
+                ownerId: currentUser.id,
+                members: [],
+                createdAt: Date.now()
+            });
             saveData(appData);
             document.getElementById('teamName').value = '';
             document.getElementById('teamDesc').value = '';
+
             renderAll();
+            renderTeamSelects();
+
             alert(`✅ 团队 "${name}" 创建成功！`);
         }
 
@@ -884,10 +990,7 @@
             container.innerHTML = appData.competitions.map(c => {
                 const now = Date.now();
                 let statusText, statusClass;
-                if (now < c.startTime) { statusText = '⏳ 未开始';
-                    statusClass = 'upcoming'; } else if (now >= c.startTime && now <= c.endTime) { statusText = '🔴 进行中';
-                    statusClass = 'ongoing'; } else { statusText = '✅ 已结束';
-                    statusClass = 'ended'; }
+                if (now < c.startTime) { statusText = '⏳ 未开始'; statusClass = 'upcoming'; } else if (now >= c.startTime && now <= c.endTime) { statusText = '🔴 进行中'; statusClass = 'ongoing'; } else { statusText = '✅ 已结束'; statusClass = 'ended'; }
                 const registered = appData.competitionRegistrations.some(r => r.compId === c.id && r.userId === currentUser?.id);
                 return `<div class="competition-item"><div class="comp-name">${c.name}</div><div class="comp-meta">📅 ${formatDateTime(c.startTime)} - ${formatDateTime(c.endTime)} · 📚 ${(c.problems || []).length} 题 · 创建者: ${c.createdBy}</div><div style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;"><span class="comp-status ${statusClass}">${statusText}</span>${currentUser ? (registered ? `<span style="color:#52c41a;font-size:13px;">✅ 已报名</span>` : `<button class="btn btn-sm btn-primary" onclick="registerCompetition(${c.id})">报名参赛</button>`) : ''}${currentUser && (currentUser.role === 'owner' || currentUser.role === 'admin') ? `<button class="btn btn-sm btn-danger" onclick="deleteCompetition(${c.id})">删除</button>` : ''}</div>${c.desc ? `<div style="margin-top:4px;font-size:13px;color:#666;">${c.desc}</div>` : ''}</div>`;
             }).join('');
@@ -899,7 +1002,6 @@
         }
 
         function openNewCompetition() { if (!currentUser) { alert('请先登录'); return; } document.getElementById('newCompetitionModal').classList.add('active'); }
-
         function closeNewCompetition() { document.getElementById('newCompetitionModal').classList.remove('active'); }
 
         function submitCompetition() {
@@ -956,7 +1058,27 @@
             const diffMap = { easy: 'tag-green', mid: 'tag-orange', hard: 'tag-red' };
             const diffLabel = { easy: '简单', mid: '中等', hard: '困难' };
             const statusMap = { solved: '✅ 已通过', unsolved: '⬜ 未尝试', wrong: '❌ 有误' };
-            container.innerHTML = list.map(p => `<div class="problem-item" onclick="openSubmitCode(${p.id})"><div class="info"><div class="title">${p.title}</div><div class="meta">${p.category} · 添加者: ${p.author}</div><div class="tags"><span class="tag ${diffMap[p.difficulty] || ''}">${diffLabel[p.difficulty] || '未知'}</span><span class="tag tag-blue">${p.category}</span></div><div style="font-size:13px;color:#666;margin-top:4px;">${p.desc}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><span class="status ${p.status === 'solved' ? 'solved' : p.status === 'wrong' ? 'wrong' : 'unsolved'}">${statusMap[p.status] || '⬜ 未尝试'}</span><div style="display:flex;gap:4px;"><button class="btn btn-sm" style="background:#1a73e8;color:#fff;" onclick="event.stopPropagation();openSubmitCode(${p.id})">✏️ 提交</button>${currentUser && (currentUser.role === 'owner' || currentUser.role === 'admin' || p.author === currentUser.username) ? `<button class="btn btn-sm" style="background:#fde8e8;color:#ff4d4f;" onclick="event.stopPropagation();deleteProblem(${p.id})">删除</button>` : ''}</div></div></div>`).join('');
+            container.innerHTML = list.map(p => {
+                const testCount = (p.testCases || []).length;
+                return `<div class="problem-item" onclick="openSubmitCode(${p.id})">
+                    <div class="info">
+                        <div class="title">${p.title}</div>
+                        <div class="meta">${p.category} · 添加者: ${p.author} · 🧪 ${testCount} 个测试点</div>
+                        <div class="tags">
+                            <span class="tag ${diffMap[p.difficulty] || ''}">${diffLabel[p.difficulty] || '未知'}</span>
+                            <span class="tag tag-blue">${p.category}</span>
+                        </div>
+                        <div style="font-size:13px;color:#666;margin-top:4px;">${p.desc}</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                        <span class="status ${p.status === 'solved' ? 'solved' : p.status === 'wrong' ? 'wrong' : 'unsolved'}">${statusMap[p.status] || '⬜ 未尝试'}</span>
+                        <div style="display:flex;gap:4px;">
+                            <button class="btn btn-sm" style="background:#1a73e8;color:#fff;" onclick="event.stopPropagation();openSubmitCode(${p.id})">✏️ 提交</button>
+                            ${currentUser && (currentUser.role === 'owner' || currentUser.role === 'admin' || p.author === currentUser.username) ? `<button class="btn btn-sm" style="background:#fde8e8;color:#ff4d4f;" onclick="event.stopPropagation();deleteProblem(${p.id})">删除</button>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         let currentSubmitProblemId = null;
@@ -973,8 +1095,7 @@
             document.getElementById('submitCodeModal').classList.add('active');
         }
 
-        function closeSubmitCode() { document.getElementById('submitCodeModal').classList.remove('active');
-            currentSubmitProblemId = null; }
+        function closeSubmitCode() { document.getElementById('submitCodeModal').classList.remove('active'); currentSubmitProblemId = null; }
 
         function submitCode() {
             const code = document.getElementById('submitCode').value.trim();
@@ -994,9 +1115,7 @@
                 const problem = appData.problems.find(p => p.id === currentSubmitProblemId);
                 if (problem) { problem.status = result.status; if (result.status === 'solved') { problem.solved = true; } else { problem.solved = false; } saveData(appData); }
                 resultDiv.textContent = result.text;
-                if (result.status === 'solved') { resultDiv.style.background = '#e6f7e6';
-                    resultDiv.style.color = '#155724'; } else { resultDiv.style.background = '#fde8e8';
-                    resultDiv.style.color = '#721c24'; }
+                if (result.status === 'solved') { resultDiv.style.background = '#e6f7e6'; resultDiv.style.color = '#155724'; } else { resultDiv.style.background = '#fde8e8'; resultDiv.style.color = '#721c24'; }
                 renderProblems();
                 renderHome();
             }, 1500 + Math.random() * 1000);
@@ -1007,6 +1126,61 @@
             appData.problems = appData.problems.filter(p => p.id !== id);
             saveData(appData);
             renderAll();
+        }
+
+        // ============================================================
+        // 测试点管理
+        // ============================================================
+        function addTestCase() {
+            const container = document.getElementById('testCaseList');
+            const index = testCases.length;
+            testCases.push({ input: '', output: '' });
+
+            const div = document.createElement('div');
+            div.className = 'testcase-item';
+            div.id = `testcase-${index}`;
+            div.innerHTML = `
+                <span class="tc-label">测试点 ${index + 1}</span>
+                <input type="text" id="tc-input-${index}" placeholder="输入数据" value="">
+                <span style="font-size:12px;color:#888;">→</span>
+                <input type="text" id="tc-output-${index}" placeholder="期望输出" value="">
+                <button class="btn btn-sm btn-danger" onclick="removeTestCase(${index})" style="font-size:11px;padding:2px 10px;">✕</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeTestCase(index) {
+            testCases.splice(index, 1);
+            renderTestCases();
+        }
+
+        function renderTestCases() {
+            const container = document.getElementById('testCaseList');
+            container.innerHTML = '';
+            testCases.forEach((tc, i) => {
+                const div = document.createElement('div');
+                div.className = 'testcase-item';
+                div.innerHTML = `
+                    <span class="tc-label">测试点 ${i + 1}</span>
+                    <input type="text" id="tc-input-${i}" value="${tc.input}" placeholder="输入数据">
+                    <span style="font-size:12px;color:#888;">→</span>
+                    <input type="text" id="tc-output-${i}" value="${tc.output}" placeholder="期望输出">
+                    <button class="btn btn-sm btn-danger" onclick="removeTestCase(${i})" style="font-size:11px;padding:2px 10px;">✕</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function collectTestCases() {
+            const result = [];
+            testCases.forEach((tc, i) => {
+                const input = document.getElementById(`tc-input-${i}`);
+                const output = document.getElementById(`tc-output-${i}`);
+                if (input && output) {
+                    result.push({ input: input.value.trim(), output: output.value.trim() });
+                }
+            });
+            return result;
         }
 
         // ============================================================
@@ -1066,39 +1240,221 @@
             alert(`✅ 已删除用户`);
         }
 
-        function adminAddProblem() {
-            if (!currentUser) return;
+        // ============================================================
+        // 题目子项配置（含测试点）
+        // ============================================================
+
+        function adminAddProblemWithTest() {
+            if (!currentUser || (currentUser.role !== 'owner' && currentUser.role !== 'admin')) {
+                alert('只有站长或管理员可以操作');
+                return;
+            }
             const title = document.getElementById('adminProbTitle').value.trim();
+            const desc = document.getElementById('adminProbDesc').value.trim();
             const category = document.getElementById('adminProbCategory').value;
             const difficulty = document.getElementById('adminProbDifficulty').value;
-            const desc = document.getElementById('adminProbDesc').value.trim();
+
             if (!title || !desc) { alert('请填写完整信息'); return; }
-            appData.problems.push({ id: appData.nextId.problem++, title, category, difficulty, desc, author: currentUser.username, solved: false, status: 'unsolved' });
+
+            const testData = collectTestCases();
+
+            appData.problems.push({
+                id: appData.nextId.problem++,
+                title: title,
+                category: category,
+                difficulty: difficulty,
+                desc: desc,
+                author: currentUser.username,
+                solved: false,
+                status: 'unsolved',
+                testCases: testData
+            });
             saveData(appData);
             document.getElementById('adminProbTitle').value = '';
             document.getElementById('adminProbDesc').value = '';
-            renderAdmin();
+            testCases = [];
+            document.getElementById('testCaseList').innerHTML = '';
+            renderAdminProblems();
             renderProblems();
             renderHome();
-            alert('✅ 题目已添加');
+            document.getElementById('adminAddResult').textContent = `✅ 已添加 "${title}"（${testData.length} 个测试点）`;
+            setTimeout(() => { document.getElementById('adminAddResult').textContent = ''; }, 3000);
+        }
+
+        function batchAddProblems() {
+            if (!currentUser || (currentUser.role !== 'owner' && currentUser.role !== 'admin')) {
+                alert('只有站长或管理员可以操作');
+                return;
+            }
+            const text = document.getElementById('batchProblemInput').value.trim();
+            if (!text) { alert('请输入题目数据'); return; }
+
+            const lines = text.split('\n').filter(line => line.trim());
+            let added = 0;
+            let errors = [];
+
+            lines.forEach((line, index) => {
+                const parts = line.split('|').map(s => s.trim());
+                if (parts.length < 4) {
+                    errors.push(`第 ${index + 1} 行格式错误`);
+                    return;
+                }
+                const [title, category, difficulty, desc] = parts;
+                if (!title || !desc) { errors.push(`第 ${index + 1} 行缺少必填项`); return; }
+
+                appData.problems.push({
+                    id: appData.nextId.problem++,
+                    title: title,
+                    category: category || '算法',
+                    difficulty: difficulty || 'easy',
+                    desc: desc,
+                    author: currentUser.username,
+                    solved: false,
+                    status: 'unsolved',
+                    testCases: []
+                });
+                added++;
+            });
+
+            saveData(appData);
+            document.getElementById('batchProblemInput').value = '';
+            document.getElementById('batchResult').textContent = errors.length > 0 ?
+                `✅ 成功添加 ${added} 道题，${errors.length} 条错误` :
+                `✅ 成功添加 ${added} 道题`;
+            renderAdminProblems();
+            renderProblems();
+            renderHome();
+            if (errors.length > 0) console.warn('批量添加错误:', errors.join('\n'));
+        }
+
+        function addSampleProblemsWithTest() {
+            if (!currentUser || (currentUser.role !== 'owner' && currentUser.role !== 'admin')) {
+                alert('只有站长或管理员可以操作');
+                return;
+            }
+
+            if (appData.problems.length >= 10) {
+                if (!confirm('题库已有 ' + appData.problems.length + ' 道题，确定要继续添加示例题目吗？')) return;
+            }
+
+            const samples = [
+                { title: 'A + B 问题', category: '算法', difficulty: 'easy', desc: '输入两个整数 a 和 b，输出 a+b 的值', testCases: [{ input: '1 2', output: '3' }, { input: '5 7', output: '12' }] },
+                { title: '快速排序', category: '算法', difficulty: 'mid', desc: '给定一个长度为 n 的数组，使用快速排序将其升序排列', testCases: [{ input: '4 3 2 1', output: '1 2 3 4' }] },
+                { title: '二分查找', category: '算法', difficulty: 'easy', desc: '在一个有序数组中查找目标值，返回其下标，不存在则返回 -1', testCases: [{ input: '1 2 3 4 5\n3', output: '2' }] },
+                { title: '栈的实现', category: '数据结构', difficulty: 'easy', desc: '实现一个栈，支持 push、pop、top 和 empty 操作', testCases: [] },
+                { title: '队列的实现', category: '数据结构', difficulty: 'easy', desc: '实现一个队列，支持 push、pop、front 和 empty 操作', testCases: [] },
+                { title: '并查集', category: '数据结构', difficulty: 'mid', desc: '实现并查集，支持 find 和 union 操作，判断两个元素是否在同一集合', testCases: [] },
+                { title: '爬楼梯', category: '动态规划', difficulty: 'easy', desc: '每次可以爬 1 或 2 个台阶，爬到第 n 阶有多少种方法', testCases: [{ input: '3', output: '3' }, { input: '5', output: '8' }] },
+                { title: '最长上升子序列', category: '动态规划', difficulty: 'mid', desc: '给定一个整数数组，求最长严格上升子序列的长度', testCases: [{ input: '10 9 2 5 3 7 101 18', output: '4' }] },
+                { title: 'Dijkstra 最短路', category: '图论', difficulty: 'hard', desc: '给定一个带权有向图，求从起点到终点的最短路径', testCases: [] },
+                { title: '质数判断', category: '数学', difficulty: 'easy', desc: '判断一个整数是否为质数，时间复杂度 O(√n)', testCases: [{ input: '17', output: '是' }, { input: '18', output: '否' }] }
+            ];
+
+            let added = 0;
+            samples.forEach(p => {
+                const exists = appData.problems.some(ex => ex.title === p.title);
+                if (!exists) {
+                    appData.problems.push({
+                        id: appData.nextId.problem++,
+                        title: p.title,
+                        category: p.category,
+                        difficulty: p.difficulty,
+                        desc: p.desc,
+                        author: currentUser.username,
+                        solved: false,
+                        status: 'unsolved',
+                        testCases: p.testCases || []
+                    });
+                    added++;
+                }
+            });
+
+            saveData(appData);
+            document.getElementById('sampleResult').textContent = `✅ 成功添加 ${added} 道示例题目`;
+            renderAdminProblems();
+            renderProblems();
+            renderHome();
+            setTimeout(() => { document.getElementById('sampleResult').textContent = ''; }, 3000);
         }
 
         function renderAdminProblems() {
             const container = document.getElementById('adminProblemList');
-            if (appData.problems.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">📚</div><p>暂无题目</p></div>'; return; }
+            const list = appData.problems;
+            document.getElementById('adminProblemCount').textContent = list.length;
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">📚</div><p>暂无题目，请添加</p></div>';
+                return;
+            }
+
+            const diffMap = { easy: '简单', mid: '中等', hard: '困难' };
+            const diffColor = { easy: '#52c41a', mid: '#faad14', hard: '#ff4d4f' };
             const statusMap = { solved: '✅ 已通过', unsolved: '⬜ 未尝试', wrong: '❌ 有误' };
-            container.innerHTML = appData.problems.map(p => `<div class="list-item" style="flex-direction:column;align-items:stretch;"><div class="main"><div class="title">${p.title}</div><div class="meta">${p.category} · ${p.author} · <span class="status ${p.status === 'solved' ? 'solved' : p.status === 'wrong' ? 'wrong' : 'unsolved'}">${statusMap[p.status] || '⬜ 未尝试'}</span></div><div style="font-size:13px;color:#666;">${p.desc}</div></div><div style="margin-top:4px;"><button class="btn btn-sm btn-danger" onclick="adminDeleteProblem(${p.id})">删除</button></div></div>`).join('');
+
+            container.innerHTML = list.map(p => `
+                <div class="list-item" style="flex-direction:column;align-items:stretch;padding:10px 0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                            <span style="font-weight:600;font-size:15px;">${p.title}</span>
+                            <span style="font-size:12px;color:#999;">ID:${p.id}</span>
+                            <span style="font-size:12px;padding:2px 10px;border-radius:10px;background:#f0f2f5;color:#555;">${p.category}</span>
+                            <span style="font-size:12px;padding:2px 10px;border-radius:10px;background:${diffColor[p.difficulty]}20;color:${diffColor[p.difficulty]};font-weight:500;">${diffMap[p.difficulty] || p.difficulty}</span>
+                            <span style="font-size:12px;color:#888;">${p.author}</span>
+                            <span style="font-size:12px;padding:2px 10px;border-radius:10px;background:${p.status === 'solved' ? '#e6f7e6' : p.status === 'wrong' ? '#fde8e8' : '#f5f5f5'};color:${p.status === 'solved' ? '#52c41a' : p.status === 'wrong' ? '#ff4d4f' : '#999'};">${statusMap[p.status] || '⬜ 未尝试'}</span>
+                            <span style="font-size:12px;color:#888;">🧪 ${(p.testCases || []).length} 个测试点</span>
+                        </div>
+                        <div style="display:flex;gap:4px;">
+                            <button class="btn btn-sm" style="background:#e8f0fe;color:#1a73e8;" onclick="adminEditProblem(${p.id})">✏️ 编辑</button>
+                            <button class="btn btn-sm" style="background:#fde8e8;color:#ff4d4f;" onclick="adminDeleteProblem(${p.id})">删除</button>
+                        </div>
+                    </div>
+                    <div style="font-size:13px;color:#666;margin-top:2px;">${p.desc}</div>
+                    ${(p.testCases || []).length > 0 ? `<div style="font-size:12px;color:#999;margin-top:4px;">📝 测试数据: ${(p.testCases || []).map((tc,i) => `#${i+1}`).join(' ')}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function adminEditProblem(id) {
+            const problem = appData.problems.find(p => p.id === id);
+            if (!problem) return;
+
+            const newTitle = prompt('修改题目名称:', problem.title);
+            if (newTitle === null) return;
+            const newDesc = prompt('修改题目描述:', problem.desc);
+            if (newDesc === null) return;
+            const newCategory = prompt('修改分类 (算法/数据结构/数学/字符串/图论/动态规划):', problem.category);
+            if (newCategory === null) return;
+            const newDifficulty = prompt('修改难度 (easy/mid/hard):', problem.difficulty);
+            if (newDifficulty === null) return;
+
+            problem.title = newTitle.trim() || problem.title;
+            problem.desc = newDesc.trim() || problem.desc;
+            problem.category = newCategory.trim() || problem.category;
+            problem.difficulty = newDifficulty.trim() || problem.difficulty;
+            saveData(appData);
+            renderAdminProblems();
+            renderProblems();
+            renderHome();
+            alert('✅ 题目已更新');
         }
 
         function adminDeleteProblem(id) {
-            if (!confirm('确定删除此题吗？')) return;
+            if (!currentUser || (currentUser.role !== 'owner' && currentUser.role !== 'admin')) {
+                alert('只有站长或管理员可以操作');
+                return;
+            }
+            const problem = appData.problems.find(p => p.id === id);
+            if (!confirm(`确定删除题目 "${problem?.title}" 吗？`)) return;
             appData.problems = appData.problems.filter(p => p.id !== id);
             saveData(appData);
-            renderAdmin();
+            renderAdminProblems();
             renderProblems();
             renderHome();
         }
 
+        // ============================================================
+        // 其他管理函数
+        // ============================================================
         function renderAdminTaopians() {
             const container = document.getElementById('adminTaopianList');
             if (appData.taopians.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">🍑</div><p>暂无桃片</p></div>'; return; }
@@ -1174,10 +1530,7 @@
         function likeTaopian(id) {
             if (!currentUser) { alert('请先登录'); return; }
             const post = appData.taopians.find(p => p.id === id);
-            if (post) { post.likes = (post.likes || 0) + 1;
-                post.liked = true;
-                saveData(appData);
-                renderTaopians(); }
+            if (post) { post.likes = (post.likes || 0) + 1; post.liked = true; saveData(appData); renderTaopians(); }
         }
 
         function commentTaopian(id) {
@@ -1202,11 +1555,7 @@
             const postBox = document.getElementById('taopianPostBox');
             const lockMsg = document.getElementById('taopianLockMsg');
             const isOwner = currentUser && currentUser.role === 'owner';
-            if (isOwner) { postBox.style.display = 'block';
-                lockMsg.style.display = 'none'; } else if (currentUser) { postBox.style.display = 'none';
-                lockMsg.style.display = 'block'; } else { postBox.style.display = 'none';
-                lockMsg.style.display = 'block';
-                lockMsg.innerHTML = `<div style="text-align:center;padding:12px;"><span style="font-size:28px;">🔒</span><h3 style="color:#ff4d4f;margin:4px 0;font-size:16px;">仅站长可发布桃片</h3><p style="color:#888;font-size:13px;">请 <a href="javascript:void(0)" onclick="openLogin()" style="color:#1a73e8;">登录</a> 后浏览</p></div>`; }
+            if (isOwner) { postBox.style.display = 'block'; lockMsg.style.display = 'none'; } else if (currentUser) { postBox.style.display = 'none'; lockMsg.style.display = 'block'; } else { postBox.style.display = 'none'; lockMsg.style.display = 'block'; lockMsg.innerHTML = `<div style="text-align:center;padding:12px;"><span style="font-size:28px;">🔒</span><h3 style="color:#ff4d4f;margin:4px 0;font-size:16px;">仅站长可发布桃片</h3><p style="color:#888;font-size:13px;">请 <a href="javascript:void(0)" onclick="openLogin()" style="color:#1a73e8;">登录</a> 后浏览</p></div>`; }
         }
 
         function renderTaopians() {
@@ -1248,10 +1597,9 @@
         }
 
         // ============================================================
-        // 操作函数
+        // 操作函数（登录/注册/改名/改密码等）
         // ============================================================
         function openNewDiscuss() { if (!currentUser) { alert('请先登录'); return; } document.getElementById('newDiscussModal').classList.add('active'); }
-
         function closeNewDiscuss() { document.getElementById('newDiscussModal').classList.remove('active'); }
 
         function submitDiscuss() {
@@ -1291,9 +1639,7 @@
         function likeBenben(id) {
             if (!currentUser) { alert('请先登录'); return; }
             const b = appData.benbens.find(b => b.id === id);
-            if (b) { b.likes = (b.likes || 0) + 1;
-                saveData(appData);
-                renderAll(); }
+            if (b) { b.likes = (b.likes || 0) + 1; saveData(appData); renderAll(); }
         }
 
         function deleteBenben(id) {
@@ -1305,7 +1651,6 @@
         }
 
         function openNewArticle() { if (!currentUser) { alert('请先登录'); return; } document.getElementById('newArticleModal').classList.add('active'); }
-
         function closeNewArticle() { document.getElementById('newArticleModal').classList.remove('active'); }
 
         function submitArticle() {
@@ -1326,14 +1671,11 @@
 
         function viewArticle(id) {
             const a = appData.articles.find(a => a.id === id);
-            if (a) { a.views = (a.views || 0) + 1;
-                saveData(appData);
-                renderAll(); }
+            if (a) { a.views = (a.views || 0) + 1; saveData(appData); renderAll(); }
             alert(`📝 ${a.title}\n\n作者：${a.author}\n标签：${(a.tags || []).join(', ')}\n\n${a.content}`);
         }
 
         function openNewMsg() { if (!currentUser) { alert('请先登录'); return; } document.getElementById('newMsgModal').classList.add('active'); }
-
         function closeNewMsg() { document.getElementById('newMsgModal').classList.remove('active'); }
 
         function sendMsg() {
@@ -1353,16 +1695,11 @@
 
         function viewMsg(id) {
             const m = appData.messages.find(m => m.id === id);
-            if (m && m.to === currentUser?.username) { m.read = true;
-                saveData(appData);
-                renderAll(); }
+            if (m && m.to === currentUser?.username) { m.read = true; saveData(appData); renderAll(); }
             alert(`✉️ 来自 ${m.from}\n\n${m.content}`);
         }
 
-        function openProfileEdit() { if (!currentUser) return; const user = getUserByName(currentUser.username); document.getElementById('editBio').value = user.bio || '';
-            document.getElementById('editSignature').value = user.signature || '';
-            document.getElementById('profileEditModal').classList.add('active'); }
-
+        function openProfileEdit() { if (!currentUser) return; const user = getUserByName(currentUser.username); document.getElementById('editBio').value = user.bio || ''; document.getElementById('editSignature').value = user.signature || ''; document.getElementById('profileEditModal').classList.add('active'); }
         function closeProfileEdit() { document.getElementById('profileEditModal').classList.remove('active'); }
 
         function saveProfile() {
@@ -1376,10 +1713,7 @@
             alert('✅ 个人资料已更新');
         }
 
-        // -- 改名 --
-        function openRename() { if (!currentUser) return; document.getElementById('renameInput').value = currentUser.username;
-            document.getElementById('renameModal').classList.add('active'); }
-
+        function openRename() { if (!currentUser) return; document.getElementById('renameInput').value = currentUser.username; document.getElementById('renameModal').classList.add('active'); }
         function closeRename() { document.getElementById('renameModal').classList.remove('active'); }
 
         function confirmRename() {
@@ -1407,12 +1741,7 @@
             alert(`✅ 用户名已修改为 "${newName}"`);
         }
 
-        // -- 修改密码 --
-        function openChangePassword() { if (!currentUser) { alert('请先登录'); return; } document.getElementById('oldPassword').value = '';
-            document.getElementById('newPassword1').value = '';
-            document.getElementById('newPassword2').value = '';
-            document.getElementById('changePasswordModal').classList.add('active'); }
-
+        function openChangePassword() { if (!currentUser) { alert('请先登录'); return; } document.getElementById('oldPassword').value = ''; document.getElementById('newPassword1').value = ''; document.getElementById('newPassword2').value = ''; document.getElementById('changePasswordModal').classList.add('active'); }
         function closeChangePassword() { document.getElementById('changePasswordModal').classList.remove('active'); }
 
         function confirmChangePassword() {
@@ -1432,11 +1761,7 @@
             alert('✅ 密码修改成功！');
         }
 
-        // -- 登录 --
-        function openLogin() { document.getElementById('loginModal').classList.add('active');
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = ''; }
-
+        function openLogin() { document.getElementById('loginModal').classList.add('active'); document.getElementById('loginUsername').value = ''; document.getElementById('loginPassword').value = ''; }
         function closeLogin() { document.getElementById('loginModal').classList.remove('active'); }
 
         function login() {
@@ -1450,14 +1775,9 @@
             renderAll();
         }
 
-        function logout() { currentUser = null;
-            sessionStorage.removeItem('currentUser');
-            renderAll(); }
+        function logout() { currentUser = null; sessionStorage.removeItem('currentUser'); renderAll(); }
 
-        function openRegister() { document.getElementById('registerModal').classList.add('active');
-            document.getElementById('regUsername').value = '';
-            document.getElementById('regPassword').value = ''; }
-
+        function openRegister() { document.getElementById('registerModal').classList.add('active'); document.getElementById('regUsername').value = ''; document.getElementById('regPassword').value = ''; }
         function closeRegister() { document.getElementById('registerModal').classList.remove('active'); }
 
         function register() {
@@ -1526,7 +1846,7 @@
 
         renderAll();
         console.log('👑 站长账号: lyx20131111 / 密码: 20131111');
-        console.log('✅ 完整版已上线！');
+        console.log('✅ 完整版已上线！测试点功能已开启！');
     </script>
 </body>
 </html>
